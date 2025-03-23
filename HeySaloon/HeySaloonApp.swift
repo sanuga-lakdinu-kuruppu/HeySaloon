@@ -4,7 +4,7 @@ import SwiftUI
 struct HeySaloonApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainLoginView()
         }
     }
 }
