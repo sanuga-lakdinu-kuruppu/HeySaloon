@@ -7,6 +7,7 @@ struct MainButtonView: View {
     var backgroundColor: Color
     var isBoarder: Bool
     var icon: String = ""
+    var isDisabled: Bool = false
 
     var body: some View {
         HStack {
@@ -36,10 +37,11 @@ struct MainButtonView: View {
         .overlay(
             RoundedRectangle(cornerRadius: 50)
                 .stroke(
-                    isBoarder ? Color("borderLineColor") : Color.clear,
+                    isBoarder ? Color("BorderLineColor") : Color.clear,
                     lineWidth: 2
                 )
         )
+        .opacity(isDisabled ? 0.5 : 1)
     }
 }
 
