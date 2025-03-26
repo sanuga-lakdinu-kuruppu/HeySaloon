@@ -83,11 +83,10 @@ struct EmailLoginView: View {
     //starting otp request network call
     private func requestOtp() {
         Task {
+            isLoading = true
             do {
-                isLoading = true
                 try await loginViewModel
                     .requestOtpWithEmail(emailAddress: email)
-                isLoading = false
                 commonGround.routes
                     .append(
                         Route.loginOtpVerification
@@ -97,6 +96,7 @@ struct EmailLoginView: View {
                     message:
                         "Sorry!, Something went wrong. Please try again later.")
             }
+            isLoading = false
         }
     }
 

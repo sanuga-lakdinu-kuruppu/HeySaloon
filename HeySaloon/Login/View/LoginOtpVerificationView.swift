@@ -41,6 +41,7 @@ struct LoginOtpVerificationView: View {
                             foregroundColor: .accent
                         )
                         .onTapGesture {
+                            requestNewOtp()
                         }
                         Spacer()
                     }
@@ -87,14 +88,36 @@ struct LoginOtpVerificationView: View {
         }
     }
 
+    private func clearOtpArray() {
+        otp.removeAll()
+        otp = Array(repeating: "", count: 4)
+    }
+
+    //request new otp network call
+    private func requestNewOtp() {
+        clearOtpArray()
+        Task {
+            isLoading = true
+            do {
+                try await loginViewModel
+                    .requestOtpWithEmail(emailAddress: commonGround.email)
+            } catch {
+
+                showAlert(
+                    message:
+                        "Sorry!, Something went wrong. Please try again later.")
+            }
+            isLoading = false
+        }
+    }
+
     //to check the entered otp (start network call)
     private func verifyOtp() {
         Task {
+            isLoading = true
             do {
-                isLoading = true
                 try await loginViewModel
                     .verifyOtpWithEmail(otp: otp.joined())
-                isLoading = false
                 commonGround.routes
                     .append(
                         Route.tabView
@@ -117,6 +140,7 @@ struct LoginOtpVerificationView: View {
                     message:
                         "Sorry!, Something went wrong. Please try again later.")
             }
+            isLoading = false
         }
     }
 
