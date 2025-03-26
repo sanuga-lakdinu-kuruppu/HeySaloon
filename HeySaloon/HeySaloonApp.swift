@@ -3,7 +3,12 @@ import SwiftUI
 @main
 struct HeySaloonApp: App {
 
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var commonGround = CommonGround.shared
+
+    init() {
+        NotificationManager.shared.requestPermission()
+    }
 
     var body: some Scene {
         WindowGroup {
@@ -26,5 +31,24 @@ struct HeySaloonApp: App {
             .accentColor(Color.white)
 
         }
+    }
+}
+
+class AppDelegate: NSObject, UIApplicationDelegate,
+    UNUserNotificationCenterDelegate
+{
+    override init() {
+        super.init()
+        UNUserNotificationCenter.current().delegate = self
+    }
+
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (
+            UNNotificationPresentationOptions
+        ) -> Void
+    ) {
+        completionHandler([.banner, .sound])
     }
 }
