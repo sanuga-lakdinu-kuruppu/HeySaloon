@@ -1,18 +1,18 @@
 import SwiftUI
 
-struct CaptionTextView: View {
+struct TitleTextView: View {
 
     var text: String
 
     var body: some View {
         Text(text)
-            .font(.caption)
+            .font(.title)
+            .fontWeight(.semibold)
             .foregroundColor(Color.white)
-            .frame(alignment: .leading)
             .accessibilityLabel(text)
     }
 }
 
 #Preview {
-    CaptionTextView(text: " kjfdsla")
+    TitleTextView(text: "fadslk")
 }
