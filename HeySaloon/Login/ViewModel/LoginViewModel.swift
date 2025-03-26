@@ -13,30 +13,12 @@ class LoginViewModel {
         let emailLoginRequest = EmailLoginRequest(
             email: emailAddress, type: "EMAIL_LOGIN")
 
-        guard let requestEncoded = try? JSONEncoder().encode(emailLoginRequest)
-        else {
-            throw LoginError.processError
-        }
-
-        //http request creation
-        guard let url = URL(string: loginRequestEndpoint) else {
-            throw LoginError.processError
-        }
-
-        var request = URLRequest(url: url)
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = "POST"
-
-        //request made
-        let (data, response) = try await URLSession.shared.upload(
-            for: request,
-            from: requestEncoded
+        //network call
+        let (data, response) = try await NetworkSupporter.shared.call(
+            request: emailLoginRequest,
+            endpoint: loginRequestEndpoint,
+            method: "POST"
         )
-
-        guard let response = response as? HTTPURLResponse
-        else {
-            throw LoginError.processError
-        }
 
         //response handling
         if response.statusCode == 200 {
@@ -53,7 +35,7 @@ class LoginViewModel {
             }
 
         } else {
-            throw LoginError.processError
+            throw NetworkError.processError
         }
     }
 
@@ -63,32 +45,12 @@ class LoginViewModel {
         let emailOtpVerifyRequest = EmailOtpVerifyRequest(
             email: CommonGround.shared.email, type: "EMAIL_LOGIN", otp: otp)
 
-        guard
-            let requestEncoded = try? JSONEncoder().encode(
-                emailOtpVerifyRequest)
-        else {
-            throw LoginError.processError
-        }
-
-        //http request creation
-        guard let url = URL(string: otpVerifyEndpoint) else {
-            throw LoginError.processError
-        }
-
-        var request = URLRequest(url: url)
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = "POST"
-
-        //request made
-        let (data, response) = try await URLSession.shared.upload(
-            for: request,
-            from: requestEncoded
+        //network call
+        let (data, response) = try await NetworkSupporter.shared.call(
+            request: emailOtpVerifyRequest,
+            endpoint: otpVerifyEndpoint,
+            method: "POST"
         )
-
-        guard let response = response as? HTTPURLResponse
-        else {
-            throw LoginError.processError
-        }
 
         //response handling
         if response.statusCode == 200 {
@@ -117,12 +79,11 @@ class LoginViewModel {
             } else if emailOtpVerifyResponse.status == "1114" {
                 throw LoginError.otpInvalid
             } else {
-                throw LoginError.processError
+                throw NetworkError.processError
             }
 
         } else {
-            print("c")
-            throw LoginError.processError
+            throw NetworkError.processError
         }
     }
 
