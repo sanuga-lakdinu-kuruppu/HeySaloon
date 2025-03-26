@@ -71,6 +71,13 @@ class LoginViewModel {
                         emailOtpVerifyResponse.data!.role!
                     CommonGround.shared.isLoggedIn = true
 
+                    NotificationManager.shared
+                        .sendInstantNotifcation(
+                            title: "Hey Saloon",
+                            body:
+                                "Welcome back, let's get you started. Have a greate experience with Hey Saloon. Enjoy the style!"
+                        )
+
                 }
             } else if emailOtpVerifyResponse.status == "1112" {
                 throw LoginError.otpExpired
