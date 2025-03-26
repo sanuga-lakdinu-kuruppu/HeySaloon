@@ -2,9 +2,12 @@ import SwiftUI
 
 struct MainLoginView: View {
 
+    @ObservedObject var commonGround: CommonGround
     @State var screenHeight: CGFloat = UIScreen.main.bounds.height
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
-    @State var isShowingBottomSheet: Bool = true
+    @State var isShowingBottomSheet: Bool = false
+    @State var offSet: CGFloat = 0
+    @State var scale: CGFloat = 1.0
     let tag: String =
         "Easiest way of locating near by stylists. Locate, Book and try the online booking experience of walking clients."
 
@@ -14,13 +17,18 @@ struct MainLoginView: View {
             VStack {
                 Image("Logo")
                     .padding(
-                        .top, screenHeight * 0.15)
+                        .top, offSet
+                    )
+                    .scaleEffect(scale)
                 Spacer()
             }
 
         }
         .onAppear {
             showBottomSheetAfterDelay()
+        }
+        .onDisappear {
+            commonGround.commingFrom = Route.mainLogin
         }
         .sheet(isPresented: $isShowingBottomSheet) {
             VStack(spacing: 16) {
@@ -30,7 +38,10 @@ struct MainLoginView: View {
                 }
                 .padding(.top, 32)
 
-                CaptionTextView(text: tag)
+                HStack {
+                    CaptionTextView(text: tag)
+                    Spacer()
+                }
 
                 //login button group
                 Button {
@@ -60,7 +71,7 @@ struct MainLoginView: View {
                 }
 
                 Button {
-                    print("email btn")
+                    navigateToEmailLogin()
                 } label: {
                     MainButtonView(
                         text: "Continue With Email Address",
@@ -89,17 +100,46 @@ struct MainLoginView: View {
             .interactiveDismissDisabled(true)
             .presentationDragIndicator(.hidden)
         }
+
     }
 
-    //delay 0.5s the bottom sheet showing after showing the main screen
+    //to navigate to the email login
+    private func navigateToEmailLogin() {
+        dismissBottomSheet()
+        commonGround.routes
+            .append(
+                Route.emailLogin
+            )
+    }
+
+    //delay 1.5s the bottom sheet showing after showing the main screen
     private func showBottomSheetAfterDelay() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        if commonGround.commingFrom == Route.mainApp {
+            offSet = screenHeight * 0.3
+            scale = 1.3
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    offSet = screenHeight * 0.15
+                    scale = 1.0
+                }
+                isShowingBottomSheet = true
+
+            }
+        } else {
             isShowingBottomSheet = true
+            offSet = screenHeight * 0.15
+            scale = 1.0
         }
+    }
+
+    //to close the bottom sheet
+    private func dismissBottomSheet() {
+        isShowingBottomSheet = false
     }
 
 }
 
 #Preview {
-    MainLoginView()
+    MainLoginView(commonGround: CommonGround.shared)
 }
