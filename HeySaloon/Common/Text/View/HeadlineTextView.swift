@@ -1,12 +1,12 @@
 import SwiftUI
 
-struct LargeTitleTextView: View {
+struct HeadlineTextView: View {
 
     var text: String
 
     var body: some View {
         Text(text)
-            .font(.largeTitle)
+            .font(.headline)
             .fontWeight(.bold)
             .foregroundColor(Color.white)
             .accessibilityLabel(text)
@@ -14,5 +14,5 @@ struct LargeTitleTextView: View {
 }
 
 #Preview {
-    LargeTitleTextView(text: "Get Started")
+    HeadlineTextView(text: "dfjsla")
 }
