@@ -1,19 +1,19 @@
 import SwiftUI
 
-struct CaptionTextView: View {
+struct CalloutTextView: View {
 
     var text: String
     var foregroundColor: Color = .white
 
     var body: some View {
         Text(text)
-            .font(.caption)
+            .font(.callout)
+            .fontWeight(.semibold)
             .foregroundColor(foregroundColor)
-            .frame(alignment: .leading)
             .accessibilityLabel(text)
     }
 }
 
 #Preview {
-    CaptionTextView(text: " kjfdsla")
+    CalloutTextView(text: "this is the callout")
 }
