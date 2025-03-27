@@ -120,7 +120,7 @@ struct LoginOtpVerificationView: View {
                     .verifyOtpWithEmail(otp: otp.joined())
                 commonGround.routes
                     .append(
-                        Route.tabView
+                        Route.commonTab
                     )
             } catch LoginError.otpExpired {
                 showAlert(
