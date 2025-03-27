@@ -73,7 +73,7 @@ struct FavoritesCardView: View {
         }
         .padding(16)
         .frame(
-            width: screenwidth * 0.85, height: screenwidth * 0.27
+            width: screenwidth * 0.8, height: screenwidth * 0.27
         )
         .background(.white)
         .cornerRadius(32)

@@ -11,7 +11,7 @@ struct HomeView: View {
     @State var isLoading: Bool = false
     @State var alertMessage: String = ""
     @State var isShowAlert: Bool = false
-    @State var favoriteStylists = HomeViewModel.shared.getTemp()
+    @State var favoriteStylists: [StylistModel]?
 
     var body: some View {
         ZStack {
@@ -22,14 +22,14 @@ struct HomeView: View {
                         HStack {
                             LargeTitleTextView(
                                 text:
-                                    "Hello, \(userProfile?.firstname ?? "Guest")"
+                                    "Hello, \(userProfile?.firstName ?? "Guest")"
                             )
                             Spacer()
                         }
                         HStack {
                             CalloutTextView(
                                 text:
-                                    "Tuesday, November 12, 2025"
+                                    getDateString()
                             )
                             Spacer()
                         }
@@ -50,34 +50,39 @@ struct HomeView: View {
                     isShowingSearchSheet = true
                 }
 
-                VStack {
-                    HStack {
-                        HeadlineTextView(text: "Luke's Favorites")
+                if let favoriteStylists = favoriteStylists {
+                    VStack {
+                        HStack {
+                            HeadlineTextView(
+                                text:
+                                    "\(userProfile?.firstName ?? "Guest")'s Favorites"
+                            )
 
-                        Spacer()
-                        CalloutTextView(
-                            text:
-                                "See more"
-                        )
-                        .onTapGesture {
-                            print("sess")
-                        }
-                    }
-
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 16) {
-                            ForEach(favoriteStylists) { stylist in
-                                FavoritesCardView(
-                                    imageUrl: stylist.thumbnailUrl,
-                                    stylistName:
-                                        "\(stylist.firstname) \(stylist.lastname)",
-                                    saloonName: stylist.saloon,
-                                    rating: stylist.rating,
-                                    totalRating: stylist.totalRating,
-                                    isOpen: stylist.isOpen
-                                )
+                            Spacer()
+                            CalloutTextView(
+                                text:
+                                    "See more"
+                            )
+                            .onTapGesture {
+                                print("see more clicked")
                             }
+                        }
 
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 16) {
+                                ForEach(favoriteStylists, id: \._id) {
+                                    stylist in
+                                    FavoritesCardView(
+                                        imageUrl: stylist.thumbnailUrl,
+                                        stylistName:
+                                            "\(stylist.firstName) \(stylist.lastName)",
+                                        saloonName: stylist.saloonName,
+                                        rating: stylist.rating,
+                                        totalRating: stylist.totalRating,
+                                        isOpen: stylist.isOpen
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -110,31 +115,39 @@ struct HomeView: View {
         .navigationBarBackButtonHidden(true)
     }
 
+    private func getDateString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, MMMM d, yyyy"
+        let currentDate = Date()
+        return formatter.string(from: currentDate)
+    }
+
     private func getHomeData() {
         Task {
             isLoading = true
             await getProfileData()
+            await getFavoriteStylists()
             isLoading = false
         }
     }
 
     private func getFavoriteStylists() async {
-        //        do {
-        //            favoriteStylists =
-        //                try await homeViewModel
-        //                .getFavoriteStylists()
-        //        } catch NetworkError.notAuthorized {
-        //            commonGround.logout()
-        //            commonGround.routes
-        //                .append(
-        //                    Route.mainLogin
-        //                )
-        //        } catch {
-        //            showAlert(
-        //                message:
-        //                    "Sorry!, Something went wrong. Please try again later."
-        //            )
-        //        }
+        do {
+            favoriteStylists =
+                try await homeViewModel
+                .getFavoriteStylists()
+        } catch NetworkError.notAuthorized {
+            commonGround.logout()
+            commonGround.routes
+                .append(
+                    Route.mainLogin
+                )
+        } catch {
+            showAlert(
+                message:
+                    "Sorry!, Something went wrong. Please try again later."
+            )
+        }
     }
 
     private func getProfileData() async {
