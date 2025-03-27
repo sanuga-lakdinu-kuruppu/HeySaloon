@@ -5,5 +5,5 @@ enum Route: String {
     case mainLogin = "MainLogin"
     case mainApp = "MainApp"
     case loginOtpVerification = "LoginOtpVerification"
-    case tabView = "TabView"
+    case commonTab = "CommonTab"
 }

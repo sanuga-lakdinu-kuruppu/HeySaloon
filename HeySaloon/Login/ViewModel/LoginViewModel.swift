@@ -17,7 +17,8 @@ class LoginViewModel {
         let (data, response) = try await NetworkSupporter.shared.call(
             request: emailLoginRequest,
             endpoint: loginRequestEndpoint,
-            method: "POST"
+            method: "POST",
+            isSecured: false
         )
 
         //response handling
@@ -49,7 +50,8 @@ class LoginViewModel {
         let (data, response) = try await NetworkSupporter.shared.call(
             request: emailOtpVerifyRequest,
             endpoint: otpVerifyEndpoint,
-            method: "POST"
+            method: "POST",
+            isSecured: false
         )
 
         //response handling

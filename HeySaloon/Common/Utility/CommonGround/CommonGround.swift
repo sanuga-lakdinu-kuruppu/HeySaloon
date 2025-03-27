@@ -14,4 +14,15 @@ class CommonGround: ObservableObject {
     @Published var isLoggedIn: Bool = false
 
     private init() {}
+
+    func logout() {
+        self.isLoggedIn = false
+        self.role = nil
+        self.commingFrom = .mainApp
+        self.email = ""
+        self.routes = []
+        self.accessToken = ""
+        self.idToken = ""
+        self.refreshToken = ""
+    }
 }

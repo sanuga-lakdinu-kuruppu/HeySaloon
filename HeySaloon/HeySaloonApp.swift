@@ -22,8 +22,8 @@ struct HeySaloonApp: App {
                             EmailLoginView(commonGround: commonGround)
                         } else if destination == Route.loginOtpVerification {
                             LoginOtpVerificationView(commonGround: commonGround)
-                        } else if destination == Route.tabView {
-                            TabView()
+                        } else if destination == Route.commonTab {
+                            CommonTabView(commonGround: commonGround)
                         }
 
                     }
