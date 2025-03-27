@@ -13,12 +13,12 @@ struct CommonTabView: View {
                 }
             ActivitiesView()
                 .tabItem {
-                    Image(systemName: "house.fill")
+                    Image(systemName: "list.clipboard.fill")
                     Text("Activities")
                 }
             AccountView()
                 .tabItem {
-                    Image(systemName: "house.fill")
+                    Image(systemName: "person.fill")
                     Text("Account")
                 }
         }
