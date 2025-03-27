@@ -29,6 +29,7 @@ struct HeySaloonApp: App {
                     }
             }
             .accentColor(Color.white)
+            //            CommonTabView(commonGround: commonGround)
 
         }
     }
