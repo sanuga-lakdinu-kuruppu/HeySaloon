@@ -3,6 +3,7 @@ import SwiftUI
 struct FavoritesCardView: View {
 
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
+    let cardHeight = UIScreen.main.bounds.width * 0.22
     var imageUrl: String
     var stylistName: String
     var saloonName: String
@@ -24,20 +25,21 @@ struct FavoritesCardView: View {
                     .resizable()
                     .scaledToFill()
                     .frame(
-                        width: screenwidth * 0.21,
-                        height: screenwidth * 0.21
+                        width: cardHeight - 16,
+                        height: cardHeight - 16
                     )
                     .clipShape(
-                        RoundedRectangle(cornerRadius: 24)
+                        RoundedRectangle(cornerRadius: 16)
                     )
                     .clipped()
             } placeholder: {
-                RoundedRectangle(cornerRadius: 24)
+                RoundedRectangle(cornerRadius: 16)
                     .foregroundColor(.hint)
                     .frame(
-                        width: screenwidth * 0.21,
-                        height: screenwidth * 0.21)
+                        width: cardHeight - 16,
+                        height: cardHeight - 16)
             }
+            .padding(.leading, 8)
 
             //right side
             VStack(alignment: .leading) {
@@ -67,16 +69,16 @@ struct FavoritesCardView: View {
                     )
                 }
             }
+            .padding(.vertical, 8)
 
             Spacer()
 
         }
-        .padding(16)
         .frame(
-            width: screenwidth * 0.8, height: screenwidth * 0.27
+            width: screenwidth * 0.8, height: cardHeight
         )
         .background(.white)
-        .cornerRadius(32)
+        .cornerRadius(24)
     }
 }
 
