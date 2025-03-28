@@ -65,8 +65,7 @@ struct EmailLoginView: View {
             .padding(.bottom, 32)
 
             if isLoading {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                CommonProgressView()
             }
         }
         .onDisappear {

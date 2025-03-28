@@ -81,7 +81,8 @@ class HomeViewModel {
         //network call
         let (data, response) = try await NetworkSupporter.shared.call(
             request: AnyCodable(),
-            endpoint: nearByStylistsEndpoint,
+            endpoint:
+                "\(nearByStylistsEndpoint)?lat=\(37.75826042644298)&log=\(-122.43800997698538)",
             method: "GET",
             isSecured: true
         )
