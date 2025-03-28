@@ -1,3 +1,4 @@
+import CoreLocation
 import SwiftUI
 
 struct HomeView: View {
@@ -12,11 +13,14 @@ struct HomeView: View {
     @State var alertMessage: String = ""
     @State var isShowAlert: Bool = false
     @State var favoriteStylists: [StylistModel]?
+    @State var nearByStylists: [StylistModel]?
+    @State var topRatedStylists: [StylistModel]?
 
     var body: some View {
         ZStack {
             MainBackgroundView()
-            VStack(spacing: 32) {
+            VStack {
+                //Top profile bar
                 HStack {
                     VStack {
                         HStack {
@@ -42,55 +46,143 @@ struct HomeView: View {
                     )
                 }
 
-                SpecialSearchBarView(
-                    searchText: $searchText, hint: "Where is your stylist?",
-                    isTapped: $isShowingSearchSheet
-                )
-                .onTapGesture {
-                    isShowingSearchSheet = true
-                }
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 32) {
 
-                if let favoriteStylists = favoriteStylists {
-                    VStack {
-                        HStack {
-                            HeadlineTextView(
-                                text:
-                                    "\(userProfile?.firstName ?? "Guest")'s Favorites"
-                            )
-
-                            Spacer()
-                            CalloutTextView(
-                                text:
-                                    "See more"
-                            )
-                            .onTapGesture {
-                                print("see more clicked")
-                            }
+                        //Search bar
+                        SpecialSearchBarView(
+                            searchText: $searchText,
+                            hint: "Where is your stylist?",
+                            isTapped: $isShowingSearchSheet
+                        )
+                        .onTapGesture {
+                            isShowingSearchSheet = true
                         }
 
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 16) {
-                                ForEach(favoriteStylists, id: \._id) {
-                                    stylist in
-                                    FavoritesCardView(
-                                        imageUrl: stylist.thumbnailUrl,
-                                        stylistName:
-                                            "\(stylist.firstName) \(stylist.lastName)",
-                                        saloonName: stylist.saloonName,
-                                        rating: stylist.rating,
-                                        totalRating: stylist.totalRating,
-                                        isOpen: stylist.isOpen
+                        //favorites tab
+                        if let favoriteStylists = favoriteStylists,
+                            !favoriteStylists.isEmpty
+                        {
+                            VStack {
+                                HStack {
+                                    HeadlineTextView(
+                                        text:
+                                            "\(userProfile?.firstName ?? "Guest")'s Favorites"
                                     )
+
+                                    Spacer()
+                                    CalloutTextView(
+                                        text:
+                                            "See more"
+                                    )
+                                    .onTapGesture {
+                                        print("see more clicked")
+                                    }
+                                }
+
+                                ScrollView(.horizontal, showsIndicators: false)
+                                {
+                                    HStack(spacing: 16) {
+                                        ForEach(favoriteStylists, id: \._id) {
+                                            stylist in
+                                            FavoritesCardView(
+                                                imageUrl: stylist.thumbnailUrl,
+                                                stylistName:
+                                                    "\(stylist.firstName) \(stylist.lastName)",
+                                                saloonName: stylist.saloonName,
+                                                rating: stylist.rating,
+                                                totalRating: stylist
+                                                    .totalRating,
+                                                isOpen: stylist.isOpen
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
+
+                        //nearby tab
+                        if let nearByStylists = nearByStylists,
+                            !nearByStylists.isEmpty
+                        {
+                            VStack {
+                                HStack {
+                                    HeadlineTextView(
+                                        text:
+                                            "Nearby Stylists"
+                                    )
+
+                                    Spacer()
+                                    CalloutTextView(
+                                        text:
+                                            "See more"
+                                    )
+                                    .onTapGesture {
+                                        print("see more clicked")
+                                    }
+                                }
+
+                                ScrollView(.horizontal, showsIndicators: false)
+                                {
+                                    HStack(spacing: 16) {
+                                        ForEach(nearByStylists, id: \._id) {
+                                            stylist in
+                                            FavoritesCardView(
+                                                imageUrl: stylist.thumbnailUrl,
+                                                stylistName:
+                                                    "\(stylist.firstName) \(stylist.lastName)",
+                                                saloonName: stylist.saloonName,
+                                                rating: stylist.rating,
+                                                totalRating: stylist
+                                                    .totalRating,
+                                                isOpen: stylist.isOpen
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        //top rated tab
+                        if let topRatedStylists = topRatedStylists,
+                            !topRatedStylists.isEmpty
+                        {
+                            VStack {
+                                HStack {
+                                    HeadlineTextView(
+                                        text:
+                                            "Top Rated Stylists"
+                                    )
+                                    Spacer()
+                                }
+
+                                ScrollView(.horizontal, showsIndicators: false)
+                                {
+                                    HStack(spacing: 16) {
+                                        ForEach(topRatedStylists, id: \._id) {
+                                            stylist in
+                                            NearByStylistCardView(
+                                                stylist: stylist)
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+
                     }
                 }
+                .padding(.top, 32)
 
                 Spacer()
             }
             .padding(.top, 32)
             .padding(.horizontal, screenwidth * 0.05)
+
+            if isLoading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+            }
         }
         .alert(
             alertMessage,
@@ -115,6 +207,7 @@ struct HomeView: View {
         .navigationBarBackButtonHidden(true)
     }
 
+    //to convert current date into required format
     private func getDateString() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE, MMMM d, yyyy"
@@ -122,15 +215,60 @@ struct HomeView: View {
         return formatter.string(from: currentDate)
     }
 
+    //to get home data mainfunction
     private func getHomeData() {
         Task {
             isLoading = true
             await getProfileData()
             await getFavoriteStylists()
+            await getNearByStylists()
+            await getTopRatedStylists()
             isLoading = false
         }
     }
 
+    //to get the top rated stylists
+    private func getTopRatedStylists() async {
+        do {
+            topRatedStylists =
+                try await homeViewModel
+                .getTopRatedStylists()
+        } catch NetworkError.notAuthorized {
+            commonGround.logout()
+            commonGround.routes
+                .append(
+                    Route.mainLogin
+                )
+        } catch {
+            showAlert(
+                message:
+                    "Sorry!, Something went wrong. Please try again later."
+            )
+        }
+    }
+
+    //to get the near by stylists
+    private func getNearByStylists() async {
+        do {
+            // need to get the exact location
+            nearByStylists =
+                try await homeViewModel
+                .getNearByStylists()
+        } catch NetworkError.notAuthorized {
+            commonGround.logout()
+            commonGround.routes
+                .append(
+                    Route.mainLogin
+                )
+        } catch {
+            showAlert(
+                message:
+                    "Sorry!, Something went wrong. Please try again later."
+            )
+        }
+    }
+
+    //to get the users favorites stylists
     private func getFavoriteStylists() async {
         do {
             favoriteStylists =
@@ -150,6 +288,7 @@ struct HomeView: View {
         }
     }
 
+    //to get the basic profile data
     private func getProfileData() async {
         do {
             userProfile =
