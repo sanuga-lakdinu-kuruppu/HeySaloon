@@ -8,6 +8,7 @@ class CommonGround: ObservableObject {
     @Published var email: String = ""
     @Published var commingFrom: Route = Route.mainApp
     @Published var accessToken: String = ""
+    //    @Published var accessToken: String = "f6567e74-720f-484d-8e1b-2a03e0e796ab"
     @Published var refreshToken: String = ""
     @Published var idToken: String = ""
     @Published var role: Role? = nil
