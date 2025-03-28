@@ -21,30 +21,7 @@ struct HomeView: View {
             MainBackgroundView()
             VStack {
                 //Top profile bar
-                HStack {
-                    VStack {
-                        HStack {
-                            LargeTitleTextView(
-                                text:
-                                    "Hello, \(userProfile?.firstName ?? "Guest")"
-                            )
-                            Spacer()
-                        }
-                        HStack {
-                            CalloutTextView(
-                                text:
-                                    getDateString()
-                            )
-                            Spacer()
-                        }
-
-                    }
-                    Spacer()
-                    ProfileImageView(
-                        url: userProfile?.imageUrl ?? ""
-
-                    )
-                }
+                UserProfileBarView(userProfile: userProfile)
 
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 32) {
@@ -63,111 +40,24 @@ struct HomeView: View {
                         if let favoriteStylists = favoriteStylists,
                             !favoriteStylists.isEmpty
                         {
-                            VStack {
-                                HStack {
-                                    HeadlineTextView(
-                                        text:
-                                            "\(userProfile?.firstName ?? "Guest")'s Favorites"
-                                    )
-
-                                    Spacer()
-                                    CalloutTextView(
-                                        text:
-                                            "See more"
-                                    )
-                                    .onTapGesture {
-                                        print("see more clicked")
-                                    }
-                                }
-
-                                ScrollView(.horizontal, showsIndicators: false)
-                                {
-                                    HStack(spacing: 16) {
-                                        ForEach(favoriteStylists, id: \._id) {
-                                            stylist in
-                                            FavoritesCardView(
-                                                imageUrl: stylist.thumbnailUrl,
-                                                stylistName:
-                                                    "\(stylist.firstName) \(stylist.lastName)",
-                                                saloonName: stylist.saloonName,
-                                                rating: stylist.rating,
-                                                totalRating: stylist
-                                                    .totalRating,
-                                                isOpen: stylist.isOpen
-                                            )
-                                        }
-                                    }
-                                }
-                            }
+                            FavoriteTabView(
+                                userProfile: userProfile,
+                                favoriteStylists: favoriteStylists
+                            )
                         }
 
                         //nearby tab
                         if let nearByStylists = nearByStylists,
                             !nearByStylists.isEmpty
                         {
-                            VStack {
-                                HStack {
-                                    HeadlineTextView(
-                                        text:
-                                            "Nearby Stylists"
-                                    )
-
-                                    Spacer()
-                                    CalloutTextView(
-                                        text:
-                                            "See more"
-                                    )
-                                    .onTapGesture {
-                                        print("see more clicked")
-                                    }
-                                }
-
-                                ScrollView(.horizontal, showsIndicators: false)
-                                {
-                                    HStack(spacing: 16) {
-                                        ForEach(nearByStylists, id: \._id) {
-                                            stylist in
-                                            FavoritesCardView(
-                                                imageUrl: stylist.thumbnailUrl,
-                                                stylistName:
-                                                    "\(stylist.firstName) \(stylist.lastName)",
-                                                saloonName: stylist.saloonName,
-                                                rating: stylist.rating,
-                                                totalRating: stylist
-                                                    .totalRating,
-                                                isOpen: stylist.isOpen
-                                            )
-                                        }
-                                    }
-                                }
-                            }
+                            NearByTabView(nearByStylists: nearByStylists)
                         }
 
                         //top rated tab
                         if let topRatedStylists = topRatedStylists,
                             !topRatedStylists.isEmpty
                         {
-                            VStack {
-                                HStack {
-                                    HeadlineTextView(
-                                        text:
-                                            "Top Rated Stylists"
-                                    )
-                                    Spacer()
-                                }
-
-                                ScrollView(.horizontal, showsIndicators: false)
-                                {
-                                    HStack(spacing: 16) {
-                                        ForEach(topRatedStylists, id: \._id) {
-                                            stylist in
-                                            NearByStylistCardView(
-                                                stylist: stylist)
-                                        }
-                                    }
-                                }
-
-                            }
+                            TopRatedTabView(topRatedStylists: topRatedStylists)
                         }
 
                     }
@@ -180,8 +70,7 @@ struct HomeView: View {
             .padding(.horizontal, screenwidth * 0.05)
 
             if isLoading {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                CommonProgressView()
             }
         }
         .alert(
@@ -205,14 +94,6 @@ struct HomeView: View {
             .presentationDragIndicator(.hidden)
         }
         .navigationBarBackButtonHidden(true)
-    }
-
-    //to convert current date into required format
-    private func getDateString() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, MMMM d, yyyy"
-        let currentDate = Date()
-        return formatter.string(from: currentDate)
     }
 
     //to get home data mainfunction
