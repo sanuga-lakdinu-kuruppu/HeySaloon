@@ -5,6 +5,10 @@ class HomeViewModel {
     let userDetailsEndpoint = "\(CommonGround.shared.baseUrl)/user"
     let favoriteStylistsEndpoint =
         "\(CommonGround.shared.baseUrl)/stylists/favorites"
+    let nearByStylistsEndpoint =
+        "\(CommonGround.shared.baseUrl)/stylists/nearBy"
+    let topRatedStylistsEndpoint =
+        "\(CommonGround.shared.baseUrl)/stylists/topRated"
 
     private init() {}
 
@@ -62,6 +66,66 @@ class HomeViewModel {
 
             if favoriteStylistsResponse.status == "0000" {
                 return favoriteStylistsResponse.data
+            } else {
+                throw NetworkError.processError
+            }
+
+        } else if response.statusCode == 401 {
+            throw NetworkError.notAuthorized
+        } else {
+            throw NetworkError.processError
+        }
+    }
+
+    func getNearByStylists() async throws -> [StylistModel] {
+        //network call
+        let (data, response) = try await NetworkSupporter.shared.call(
+            request: AnyCodable(),
+            endpoint: nearByStylistsEndpoint,
+            method: "GET",
+            isSecured: true
+        )
+
+        //response handling
+        if response.statusCode == 200 {
+
+            let nearByStylistsResponse = try JSONDecoder().decode(
+                NearByStylistsResponse.self,
+                from: data
+            )
+
+            if nearByStylistsResponse.status == "0000" {
+                return nearByStylistsResponse.data
+            } else {
+                throw NetworkError.processError
+            }
+
+        } else if response.statusCode == 401 {
+            throw NetworkError.notAuthorized
+        } else {
+            throw NetworkError.processError
+        }
+    }
+
+    func getTopRatedStylists() async throws -> [StylistModel] {
+        //network call
+        let (data, response) = try await NetworkSupporter.shared.call(
+            request: AnyCodable(),
+            endpoint: topRatedStylistsEndpoint,
+            method: "GET",
+            isSecured: true
+        )
+
+        //response handling
+        if response.statusCode == 200 {
+
+            let topRatedStylistsResponse = try JSONDecoder().decode(
+                TopRatedStylistsResponse.self,
+                from: data
+            )
+
+            if topRatedStylistsResponse.status == "0000" {
+                return topRatedStylistsResponse.data
             } else {
                 throw NetworkError.processError
             }

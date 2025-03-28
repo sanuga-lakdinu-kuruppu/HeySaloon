@@ -7,8 +7,7 @@ struct StylistModel: Codable {
     var thumbnailUrl: String
     var imageUrl: String
     var saloonName: String
-    var saloonLat: Double
-    var saloonLog: Double
+    var location: Location
     var rating: Double
     var totalRating: Int
     var isOpen: Bool
@@ -16,4 +15,8 @@ struct StylistModel: Codable {
     var end: String
     var totalQueued: Int
     var finishedAt: String
+}
+
+struct Location: Codable {
+    var coordinates: [Double]
 }

@@ -7,6 +7,7 @@ struct HeySaloonApp: App {
     @StateObject var commonGround = CommonGround.shared
 
     init() {
+        LocationManager.shared.requestWhenInUseAuthorization()
         NotificationManager.shared.requestPermission()
     }
 
