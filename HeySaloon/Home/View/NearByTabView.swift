@@ -27,18 +27,7 @@ struct NearByTabView: View {
                     if nearByStylists.count == 1 {
                         ForEach(nearByStylists, id: \._id) {
                             stylist in
-                            FavoritesCardView(
-                                imageUrl: stylist
-                                    .thumbnailUrl,
-                                stylistName:
-                                    "\(stylist.firstName) \(stylist.lastName)",
-                                saloonName: stylist
-                                    .saloonName,
-                                rating: stylist.rating,
-                                totalRating: stylist
-                                    .totalRating,
-                                isOpen: stylist.isOpen
-                            )
+                            FavoritesCardView(stylist: stylist)
                         }
                     } else {
                         ForEach(nearByStylists, id: \._id) {

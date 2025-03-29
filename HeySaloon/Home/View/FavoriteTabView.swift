@@ -27,16 +27,7 @@ struct FavoriteTabView: View {
                 HStack(spacing: 16) {
                     ForEach(favoriteStylists, id: \._id) {
                         stylist in
-                        FavoritesCardView(
-                            imageUrl: stylist.thumbnailUrl,
-                            stylistName:
-                                "\(stylist.firstName) \(stylist.lastName)",
-                            saloonName: stylist.saloonName,
-                            rating: stylist.rating,
-                            totalRating: stylist
-                                .totalRating,
-                            isOpen: stylist.isOpen
-                        )
+                        FavoritesCardView(stylist: stylist)
                     }
                 }
             }
