@@ -2,14 +2,9 @@ import SwiftUI
 
 struct FavoritesCardView: View {
 
+    var stylist: StylistModel
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
     let cardHeight = UIScreen.main.bounds.width * 0.22
-    var imageUrl: String
-    var stylistName: String
-    var saloonName: String
-    var rating: Double
-    var totalRating: Int
-    var isOpen: Bool
 
     var body: some View {
         HStack(spacing: 16) {
@@ -18,7 +13,7 @@ struct FavoritesCardView: View {
             AsyncImage(
                 url: URL(
                     string:
-                        imageUrl
+                        stylist.thumbnailUrl
                 )
             ) { Image in
                 Image
@@ -46,11 +41,11 @@ struct FavoritesCardView: View {
                 //top
                 CalloutTextView(
                     text:
-                        stylistName,
+                        stylist.firstName + " " + stylist.lastName,
                     foregroundColor: .mainBackground
                 )
                 CaptionTextView(
-                    text: "From \(saloonName)",
+                    text: "From \(stylist.saloonName)",
                     foregroundColor: .mainBackground
                 )
                 Spacer()
@@ -60,12 +55,13 @@ struct FavoritesCardView: View {
                     Image(systemName: "star.fill")
                         .foregroundColor(Color("AccentColor"))
                     CaptionTextView(
-                        text: "\(rating)(\(totalRating))",
+                        text: "\(stylist.rating)(\(stylist.totalRating))",
                         foregroundColor: .hint
                     )
                     CaptionTextView(
-                        text: isOpen ? "Open Now" : "Closed",
-                        foregroundColor: isOpen ? Color("AccentColor") : .error
+                        text: stylist.isOpen ? "Open Now" : "Closed",
+                        foregroundColor: stylist.isOpen
+                            ? Color("AccentColor") : .error
                     )
                 }
             }
@@ -84,11 +80,20 @@ struct FavoritesCardView: View {
 
 #Preview {
     FavoritesCardView(
-        imageUrl: "",
-        stylistName: "Mr. Michael DeMoya",
-        saloonName: "Sayona Saloon",
-        rating: 4.7,
-        totalRating: 422,
-        isOpen: true
-    )
+        stylist: .init(
+            _id: "fds",
+            firstName: "jfadls",
+            lastName: "kjladfs",
+            thumbnailUrl: "fjdalks",
+            imageUrl: "fkjadls",
+            saloonName: "jfdslake",
+            location: .init(coordinates: [3, 3]),
+            rating: 432.423,
+            totalRating: 23,
+            isOpen: true,
+            start: "42",
+            end: "ffds",
+            totalQueued: 22,
+            finishedAt: "2024-03-28T16:30:00.000Z"
+        ))
 }
