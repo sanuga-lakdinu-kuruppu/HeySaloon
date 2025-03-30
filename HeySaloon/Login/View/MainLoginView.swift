@@ -100,6 +100,7 @@ struct MainLoginView: View {
             .interactiveDismissDisabled(true)
             .presentationDragIndicator(.hidden)
         }
+        .navigationBarBackButtonHidden(true)
 
     }
 
@@ -114,16 +115,24 @@ struct MainLoginView: View {
 
     //delay 1.5s the bottom sheet showing after showing the main screen
     private func showBottomSheetAfterDelay() {
+        commonGround.getUserDefaults()
         if commonGround.commingFrom == Route.mainApp {
             offSet = screenHeight * 0.3
             scale = 1.3
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    offSet = screenHeight * 0.15
-                    scale = 1.0
+                if commonGround.isLoggedIn {
+                    commonGround.routes
+                        .append(
+                            Route.commonTab
+                        )
+                } else {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        offSet = screenHeight * 0.15
+                        scale = 1.0
+                    }
+                    isShowingBottomSheet = true
                 }
-                isShowingBottomSheet = true
 
             }
         } else {
