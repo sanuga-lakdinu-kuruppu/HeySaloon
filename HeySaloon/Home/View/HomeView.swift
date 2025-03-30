@@ -86,32 +86,24 @@ struct HomeView: View {
         .onAppear {
             getHomeData()
         }
+        .onDisappear {
+            commonGround.commingFrom = Route.home
+        }
+        .onChange(of: commonGround.commingFrom) { newValue in
+            if commonGround.commingFrom == Route.stylistIndetail {
+                isShowingSearchSheet = true
+            }
+        }
         .sheet(isPresented: $isShowingSearchSheet) {
             ZStack {
                 VStack {
                     VStack(spacing: 32) {
 
                         //title
-                        HStack {
-                            Spacer()
-                            HeadlineTextView(
-                                text: isShowingSearchResult
-                                    ? "Stylists Nearby"
-                                    : "Find a Stylist"
-                            )
-                            Spacer()
-                            Button {
-                                if isShowingSearchResult {
-                                    isShowingSearchResult.toggle()
-                                } else {
-                                    isShowingSearchSheet.toggle()
-                                }
-                            } label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(Color.white)
-
-                            }
-                        }
+                        SearchViewTitleView(
+                            isShowingSearchSheet: $isShowingSearchSheet,
+                            isShowingSearchResult: $isShowingSearchResult
+                        )
 
                         //search bar
                         if !isShowingSearchResult {
@@ -134,6 +126,15 @@ struct HomeView: View {
                                     ForEach(searchedStylists, id: \._id) {
                                         stylist in
                                         SearchResultCardView(stylist: stylist)
+                                            .onTapGesture {
+                                                isShowingSearchSheet = false
+                                                commonGround.selectedStylist =
+                                                    stylist
+                                                commonGround.routes
+                                                    .append(
+                                                        Route.stylistIndetail
+                                                    )
+                                            }
                                     }
                                 }
                             } else {

@@ -13,24 +13,31 @@ struct HeySaloonApp: App {
 
     var body: some Scene {
         WindowGroup {
-            //            NavigationStack(path: $commonGround.routes) {
-            //                MainLoginView(commonGround: commonGround)
-            //                    .navigationDestination(for: Route.self) {
-            //                        destination in
-            //
-            //                        //global navigation all around the application
-            //                        if destination == Route.emailLogin {
-            //                            EmailLoginView(commonGround: commonGround)
-            //                        } else if destination == Route.loginOtpVerification {
-            //                            LoginOtpVerificationView(commonGround: commonGround)
-            //                        } else if destination == Route.commonTab {
-            //                            CommonTabView(commonGround: commonGround)
-            //                        }
-            //
-            //                    }
-            //            }
-            //            .accentColor(Color.white)
-            CommonTabView(commonGround: commonGround)
+            NavigationStack(path: $commonGround.routes) {
+                MainLoginView(commonGround: commonGround)
+                    .navigationDestination(for: Route.self) {
+                        destination in
+
+                        //global navigation all around the application
+                        if destination == Route.emailLogin {
+                            EmailLoginView(commonGround: commonGround)
+                        } else if destination == Route.loginOtpVerification {
+                            LoginOtpVerificationView(commonGround: commonGround)
+                        } else if destination == Route.commonTab {
+                            CommonTabView(commonGround: commonGround)
+                        } else if destination == Route.stylistIndetail {
+                            StylistIndetailView(
+                                commonGround: commonGround,
+                                stylist: CommonGround.shared.selectedStylist!)
+                        } else if destination == Route.mainLogin {
+                            MainLoginView(
+                                commonGround: commonGround
+                            )
+                        }
+
+                    }
+            }
+            .accentColor(Color.accent)
 
         }
     }
