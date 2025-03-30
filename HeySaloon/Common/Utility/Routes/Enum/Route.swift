@@ -6,4 +6,6 @@ enum Route: String {
     case mainApp = "MainApp"
     case loginOtpVerification = "LoginOtpVerification"
     case commonTab = "CommonTab"
+    case stylistIndetail = "StylistIndetail"
+    case home = "Home"
 }

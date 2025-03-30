@@ -7,14 +7,29 @@ class CommonGround: ObservableObject {
     @Published var routes: [Route] = []
     @Published var email: String = ""
     @Published var commingFrom: Route = Route.mainApp
-    //    @Published var accessToken: String = ""
-    @Published var accessToken: String = "f6567e74-720f-484d-8e1b-2a03e0e796ab"
+    @Published var accessToken: String = ""
     @Published var refreshToken: String = ""
     @Published var idToken: String = ""
     @Published var role: Role? = nil
     @Published var isLoggedIn: Bool = false
+    @Published var selectedStylist: StylistModel? = nil
 
     private init() {}
+
+    func getUserDefaults() {
+        isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
+        accessToken = UserDefaults.standard.string(forKey: "accessToken") ?? ""
+    }
+
+    func saveUserDefaults() {
+        UserDefaults.standard.set(isLoggedIn, forKey: "isLoggedIn")
+        UserDefaults.standard.set(accessToken, forKey: "accessToken")
+    }
+
+    func removeUserDefaults() {
+        UserDefaults.standard.removeObject(forKey: "isLoggedIn")
+        UserDefaults.standard.removeObject(forKey: "accessToken")
+    }
 
     func logout() {
         self.isLoggedIn = false
@@ -25,5 +40,6 @@ class CommonGround: ObservableObject {
         self.accessToken = ""
         self.idToken = ""
         self.refreshToken = ""
+        self.removeUserDefaults()
     }
 }
