@@ -32,7 +32,8 @@ struct SearchResultCardView: View {
                         .foregroundColor(.hint)
                         .frame(
                             width: cardHeight - 16,
-                            height: cardHeight - 16)
+                            height: cardHeight - 16
+                        )
                 }
 
                 VStack {
@@ -92,7 +93,7 @@ struct SearchResultCardView: View {
                         .foregroundColor(.hint)
                     CaptionTextView(
                         text:
-                            "\(stylist.totalQueued) Until (\(getFinishTime(finishTime: stylist.finishedAt)))",
+                            "\(stylist.totalQueued) Until (\(SupportManager.shared.getFinishTime(finishTime: stylist.finishedAt)))",
                         foregroundColor: .hint
                     )
                 }
@@ -103,27 +104,11 @@ struct SearchResultCardView: View {
         }
         .padding(8)
         .frame(
-            maxWidth: .infinity, maxHeight: cardHeight
+            maxWidth: .infinity,
+            maxHeight: cardHeight
         )
         .background(.white)
         .cornerRadius(32)
-    }
-
-    //to convert the time string to the desired format
-    func getFinishTime(finishTime: String) -> String {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [
-            .withInternetDateTime, .withFractionalSeconds,
-        ]
-
-        if let date = formatter.date(from: finishTime) {
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "HH:mm"
-            let timeOnly = timeFormatter.string(from: date)
-            return timeOnly
-        } else {
-            return ""
-        }
     }
 }
 
@@ -131,6 +116,7 @@ struct SearchResultCardView: View {
     SearchResultCardView(
         stylist: .init(
             _id: "fds",
+            stylistId: 432,
             firstName: "jfadls",
             lastName: "kjladfs",
             thumbnailUrl: "fjdalks",
@@ -143,6 +129,17 @@ struct SearchResultCardView: View {
             start: "42",
             end: "ffds",
             totalQueued: 22,
-            finishedAt: "2024-03-28T16:30:00.000Z"
-        ))
+            finishedAt: "2024-03-28T16:30:00.000Z",
+            services: [
+                .init(id: 1, name: "Crew Cut", price: 1200.00, minutes: 25),
+                .init(id: 2, name: "Buzz Cut", price: 1300.00, minutes: 30),
+                .init(
+                    id: 3,
+                    name: "Beard Trim & Shaping",
+                    price: 900.00,
+                    minutes: 15
+                ),
+            ]
+        )
+    )
 }

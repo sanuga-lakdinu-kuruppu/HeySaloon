@@ -1,9 +1,11 @@
 import SwiftUI
 
 struct FuctionListView: View {
-    
+
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
-    
+    @Binding var isShowingServiceSheet: Bool
+    @Binding var isShowingPortfolioSheet: Bool
+
     var body: some View {
         VStack(spacing: screenwidth * 0.04) {
             HStack {
@@ -17,7 +19,7 @@ struct FuctionListView: View {
                 }
 
                 Button {
-
+                    isShowingServiceSheet.toggle()
                 } label: {
                     FuctionButtonView(
                         icon: "list.clipboard.fill",
@@ -25,7 +27,7 @@ struct FuctionListView: View {
                 }
 
                 Button {
-
+                    isShowingPortfolioSheet.toggle()
                 } label: {
                     FuctionButtonView(
                         icon: "folder.fill.badge.person.crop",
@@ -39,6 +41,8 @@ struct FuctionListView: View {
                         icon: "location.fill",
                         text: "Direction")
                 }
+
+                Spacer()
 
             }
 
@@ -76,5 +80,5 @@ struct FuctionListView: View {
 }
 
 #Preview {
-    FuctionListView()
+    //    FuctionListView()
 }

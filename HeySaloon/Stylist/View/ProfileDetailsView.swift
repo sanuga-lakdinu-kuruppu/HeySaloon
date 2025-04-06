@@ -15,7 +15,8 @@ struct ProfileDetailsView: View {
                 Image(systemName: "heart")
                     .resizable()
                     .frame(
-                        width: screenwidth * 0.05, height: screenwidth * 0.05
+                        width: screenwidth * 0.05,
+                        height: screenwidth * 0.05
                     )
                     .foregroundColor(.white)
             }
@@ -37,7 +38,8 @@ struct ProfileDetailsView: View {
                     .foregroundColor(.white)
             }
             .frame(
-                width: screenwidth * 0.25, height: screenwidth * 0.25
+                width: screenwidth * 0.25,
+                height: screenwidth * 0.25
             )
             .padding(.top, screenwidth * 0.06)
 
@@ -81,6 +83,7 @@ struct ProfileDetailsView: View {
     ProfileDetailsView(
         stylist: .init(
             _id: "fds",
+            stylistId: 432,
             firstName: "jfadls",
             lastName: "kjladfs",
             thumbnailUrl: "fjdalks",
@@ -93,6 +96,17 @@ struct ProfileDetailsView: View {
             start: "42",
             end: "ffds",
             totalQueued: 22,
-            finishedAt: "2024-03-28T16:30:00.000Z"
-        ))
+            finishedAt: "2024-03-28T16:30:00.000Z",
+            services: [
+                .init(id: 1, name: "Crew Cut", price: 1200.00, minutes: 25),
+                .init(id: 2, name: "Buzz Cut", price: 1300.00, minutes: 30),
+                .init(
+                    id: 3,
+                    name: "Beard Trim & Shaping",
+                    price: 900.00,
+                    minutes: 15
+                ),
+            ]
+        )
+    )
 }
