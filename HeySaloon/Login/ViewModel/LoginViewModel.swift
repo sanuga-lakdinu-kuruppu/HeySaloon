@@ -11,7 +11,9 @@ class LoginViewModel {
 
         //request object creation
         let emailLoginRequest = EmailLoginRequest(
-            email: emailAddress, type: "EMAIL_LOGIN")
+            email: emailAddress,
+            type: "EMAIL_LOGIN"
+        )
 
         //network call
         let (data, response) = try await NetworkSupporter.shared.call(
@@ -44,7 +46,10 @@ class LoginViewModel {
 
         //request object creation
         let emailOtpVerifyRequest = EmailOtpVerifyRequest(
-            email: CommonGround.shared.email, type: "EMAIL_LOGIN", otp: otp)
+            email: CommonGround.shared.email,
+            type: "EMAIL_LOGIN",
+            otp: otp
+        )
 
         //network call
         let (data, response) = try await NetworkSupporter.shared.call(

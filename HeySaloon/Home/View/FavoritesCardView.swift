@@ -32,7 +32,8 @@ struct FavoritesCardView: View {
                     .foregroundColor(.hint)
                     .frame(
                         width: cardHeight - 16,
-                        height: cardHeight - 16)
+                        height: cardHeight - 16
+                    )
             }
             .padding(.leading, 8)
 
@@ -71,7 +72,8 @@ struct FavoritesCardView: View {
 
         }
         .frame(
-            width: screenwidth * 0.8, height: cardHeight
+            width: screenwidth * 0.8,
+            height: cardHeight
         )
         .background(.white)
         .cornerRadius(24)
@@ -82,6 +84,7 @@ struct FavoritesCardView: View {
     FavoritesCardView(
         stylist: .init(
             _id: "fds",
+            stylistId: 432,
             firstName: "jfadls",
             lastName: "kjladfs",
             thumbnailUrl: "fjdalks",
@@ -94,6 +97,17 @@ struct FavoritesCardView: View {
             start: "42",
             end: "ffds",
             totalQueued: 22,
-            finishedAt: "2024-03-28T16:30:00.000Z"
-        ))
+            finishedAt: "2024-03-28T16:30:00.000Z",
+            services: [
+                .init(id: 1, name: "Crew Cut", price: 1200.00, minutes: 25),
+                .init(id: 2, name: "Buzz Cut", price: 1300.00, minutes: 30),
+                .init(
+                    id: 3,
+                    name: "Beard Trim & Shaping",
+                    price: 900.00,
+                    minutes: 15
+                ),
+            ]
+        )
+    )
 }
