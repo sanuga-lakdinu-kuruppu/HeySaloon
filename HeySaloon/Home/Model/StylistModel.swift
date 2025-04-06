@@ -2,6 +2,7 @@ import SwiftUI
 
 struct StylistModel: Codable {
     var _id: String
+    var stylistId: Int
     var firstName: String
     var lastName: String
     var thumbnailUrl: String
@@ -15,6 +16,7 @@ struct StylistModel: Codable {
     var end: String
     var totalQueued: Int
     var finishedAt: String
+    var services: [ServiceModel]
 }
 
 struct Location: Codable {

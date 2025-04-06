@@ -89,11 +89,6 @@ struct HomeView: View {
         .onDisappear {
             commonGround.commingFrom = Route.home
         }
-        .onChange(of: commonGround.commingFrom) { newValue in
-            if commonGround.commingFrom == Route.stylistIndetail {
-                isShowingSearchSheet = true
-            }
-        }
         .sheet(isPresented: $isShowingSearchSheet) {
             ZStack {
                 VStack {

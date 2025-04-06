@@ -5,7 +5,6 @@ struct CommonDividerView: View {
         Divider()
             .frame(maxWidth: .infinity, maxHeight: 1)
             .background(.white)
-            .padding(.top, 8)
     }
 }
 

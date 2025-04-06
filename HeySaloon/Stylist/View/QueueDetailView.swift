@@ -18,7 +18,7 @@ struct QueueDetailView: View {
                             text: "\(stylist.totalQueued) People Queued")
                         CaptionTextView(
                             text:
-                                "Wait 20 min (\(getFinishTime(finishTime: stylist.finishedAt)))"
+                                "Wait \(SupportManager.shared.getTimeDifference(finishTime: stylist.finishedAt)) min (\(SupportManager.shared.getFinishTime(finishTime: stylist.finishedAt)))"
                         )
                     }
                     Spacer()
@@ -45,23 +45,6 @@ struct QueueDetailView: View {
             )
         }
         .ignoresSafeArea()
-    }
-
-    //to convert the time string to the desired format
-    func getFinishTime(finishTime: String) -> String {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [
-            .withInternetDateTime, .withFractionalSeconds,
-        ]
-
-        if let date = formatter.date(from: finishTime) {
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "HH:mm"
-            let timeOnly = timeFormatter.string(from: date)
-            return timeOnly
-        } else {
-            return ""
-        }
     }
 }
 

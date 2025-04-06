@@ -30,6 +30,7 @@ struct SearchItemView: View {
                 )
                 CaptionTextView(text: subtitleText)
                 CommonDividerView()
+                    .padding(.top, 8)
             }
             Spacer()
         }

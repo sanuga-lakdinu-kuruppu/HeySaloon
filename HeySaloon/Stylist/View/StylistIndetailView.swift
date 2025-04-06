@@ -3,9 +3,19 @@ import SwiftUI
 struct StylistIndetailView: View {
 
     @ObservedObject var commonGround: CommonGround
-    var stylist: StylistModel
+    @State var stylist: StylistModel
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
     @State var screenHeight: CGFloat = UIScreen.main.bounds.height
+    @State var isShowingServiceSheet: Bool = false
+    @State var isShowingPortfolioSheet: Bool = false
+    @State var isShowBookingConfirmationSheet: Bool = false
+    @State var isShowBookingIndetailsSheet: Bool = false
+    @State var selectedServices: [ServiceModel] = []
+    @State var grandTotal: Double = 0.00
+    @State var queuedAt: Int = 0
+    @State var finishTime: String = ""
+    @State var serviceTime: Int = 0
+    @State var createdBooking: BookingModel? = nil
 
     var body: some View {
         ZStack {
@@ -29,7 +39,10 @@ struct StylistIndetailView: View {
             VStack {
                 Spacer()
                 VStack(spacing: screenwidth * 0.08) {
-                    FuctionListView()
+                    FuctionListView(
+                        isShowingServiceSheet: $isShowingServiceSheet,
+                        isShowingPortfolioSheet: $isShowingPortfolioSheet
+                    )
 
                     SaloonDetailView()
 
@@ -54,6 +67,36 @@ struct StylistIndetailView: View {
         .onDisappear {
             commonGround.commingFrom = Route.stylistIndetail
         }
+        .sheet(isPresented: $isShowingServiceSheet) {
+            ServiceDetailSheetView(
+                isShowingServiceSheet: $isShowingServiceSheet,
+                isShowBookingConfirmationSheet: $isShowBookingConfirmationSheet,
+                grandTotal: $grandTotal,
+                stylist: $stylist,
+                selectedServices: $selectedServices,
+                queuedAt: $queuedAt,
+                finishTime: $finishTime,
+                serviceTime: $serviceTime
+            )
+            .sheet(isPresented: $isShowBookingConfirmationSheet) {
+                BookingConfirmatinSheetView(
+                    commonGround: commonGround,
+                    isShowBookingConfirmationSheet:
+                        $isShowBookingConfirmationSheet,
+                    grandTotal: $grandTotal,
+                    selectedServices: $selectedServices,
+                    queuedAt: $queuedAt,
+                    finishTime: $finishTime,
+                    serviceTime: $serviceTime,
+                    stylist: $stylist,
+                    createdBooking: $createdBooking
+                )
+                .sheet(isPresented: $isShowBookingIndetailsSheet) {
+                    
+                }
+            }
+
+        }
     }
 }
 
@@ -62,6 +105,7 @@ struct StylistIndetailView: View {
         commonGround: CommonGround.shared,
         stylist: .init(
             _id: "fds",
+            stylistId: 432,
             firstName: "jfadls",
             lastName: "kjladfs",
             thumbnailUrl: "fjdalks",
@@ -74,6 +118,23 @@ struct StylistIndetailView: View {
             start: "42",
             end: "ffds",
             totalQueued: 22,
-            finishedAt: "2024-03-28T16:30:00.000Z"
-        ))
+            finishedAt: "2025-04-02T6:30:00.000Z",
+            services: [
+                .init(id: 1, name: "Crew Cut", price: 1200.00, minutes: 25),
+                .init(id: 2, name: "Buzz Cut", price: 1300.00, minutes: 30),
+                .init(
+                    id: 3,
+                    name: "Beard Trim & Shaping",
+                    price: 900.00,
+                    minutes: 15
+                ),
+            ]
+        )
+    )
 }
+
+//@State var services: [ServiceModel] = [
+//    .init(name: "Crew Cut", price: 1200.00, minutes: 25),
+//    .init(name: "Buzz Cut", price: 1300.00, minutes: 30),
+//    .init(name: "Beard Trim & Shaping", price: 900.00, minutes: 15),
+//]
