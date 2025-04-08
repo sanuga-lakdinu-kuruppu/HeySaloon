@@ -10,12 +10,17 @@ struct StylistIndetailView: View {
     @State var isShowingPortfolioSheet: Bool = false
     @State var isShowBookingConfirmationSheet: Bool = false
     @State var isShowBookingIndetailsSheet: Bool = false
+    @State var isShowCancelSheet: Bool = false
     @State var selectedServices: [ServiceModel] = []
     @State var grandTotal: Double = 0.00
     @State var queuedAt: Int = 0
     @State var finishTime: String = ""
     @State var serviceTime: Int = 0
     @State var createdBooking: BookingModel? = nil
+    @State var isLoading: Bool = false
+    @State var alertMessage: String = ""
+    @State var isShowAlert: Bool = false
+    let stylistViewModel: StylistViewModel = StylistViewModel.shared
 
     var body: some View {
         ZStack {
@@ -33,7 +38,11 @@ struct StylistIndetailView: View {
             ProfileDetailsView(stylist: stylist)
 
             //4th layer
-            QueueDetailView(stylist: stylist)
+            QueueDetailView(
+                stylist: stylist,
+                createdBooking: $createdBooking,
+                isShowBookingIndetailsSheet: $isShowBookingIndetailsSheet
+            )
 
             //5th layer
             VStack {
@@ -63,6 +72,19 @@ struct StylistIndetailView: View {
             }
             .ignoresSafeArea()
 
+            if isLoading {
+                CommonProgressView()
+            }
+
+        }
+        .alert(
+            alertMessage,
+            isPresented: $isShowAlert
+        ) {
+            Button("OK", role: .cancel) {}
+        }
+        .onAppear {
+            getAppointment()
         }
         .onDisappear {
             commonGround.commingFrom = Route.stylistIndetail
@@ -76,13 +98,16 @@ struct StylistIndetailView: View {
                 selectedServices: $selectedServices,
                 queuedAt: $queuedAt,
                 finishTime: $finishTime,
-                serviceTime: $serviceTime
+                serviceTime: $serviceTime,
+                createdBooking: $createdBooking
             )
             .sheet(isPresented: $isShowBookingConfirmationSheet) {
                 BookingConfirmatinSheetView(
                     commonGround: commonGround,
                     isShowBookingConfirmationSheet:
                         $isShowBookingConfirmationSheet,
+                    isShowBookingIndetailsSheet: $isShowBookingIndetailsSheet,
+                    isShowingServiceSheet: $isShowingServiceSheet,
                     grandTotal: $grandTotal,
                     selectedServices: $selectedServices,
                     queuedAt: $queuedAt,
@@ -91,12 +116,57 @@ struct StylistIndetailView: View {
                     stylist: $stylist,
                     createdBooking: $createdBooking
                 )
-                .sheet(isPresented: $isShowBookingIndetailsSheet) {
-                    
-                }
+
             }
 
         }
+        .sheet(isPresented: $isShowBookingIndetailsSheet) {
+            BookingIndetailSheetView(
+                commonGround: commonGround,
+                thisBooking: $createdBooking,
+                isShowBookingIndetailsSheet:
+                    $isShowBookingIndetailsSheet,
+                thisStylist: $stylist,
+                isShowCancelSheet: $isShowCancelSheet
+            )
+            .sheet(isPresented: $isShowCancelSheet) {
+                BookingCancellationSheetView(
+                    isShowCancelSheet: $isShowCancelSheet
+                )
+            }
+        }
+    }
+
+    private func getAppointment() {
+        Task {
+            await getBooking()
+        }
+    }
+
+    //to get appointment details
+    private func getBooking() async {
+        do {
+            createdBooking =
+                try await stylistViewModel
+                .getAppointment(stylist: stylist)
+        } catch NetworkError.notAuthorized {
+            commonGround.logout()
+            commonGround.routes
+                .append(
+                    Route.mainLogin
+                )
+        } catch {
+            showAlert(
+                message:
+                    "Sorry!, Something went wrong. Please try again later."
+            )
+        }
+    }
+
+    //to show the alert
+    private func showAlert(message: String) {
+        alertMessage = message
+        isShowAlert = true
     }
 }
 
@@ -132,9 +202,3 @@ struct StylistIndetailView: View {
         )
     )
 }
-
-//@State var services: [ServiceModel] = [
-//    .init(name: "Crew Cut", price: 1200.00, minutes: 25),
-//    .init(name: "Buzz Cut", price: 1300.00, minutes: 30),
-//    .init(name: "Beard Trim & Shaping", price: 900.00, minutes: 15),
-//]

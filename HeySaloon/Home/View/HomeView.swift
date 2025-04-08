@@ -9,7 +9,6 @@ struct HomeView: View {
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
     @State var searchText: String = ""
     @State var isShowingSearchSheet: Bool = false
-    @State var userProfile: UserProfileModel?
     @State var isLoading: Bool = false
     @State var alertMessage: String = ""
     @State var isShowAlert: Bool = false
@@ -25,7 +24,7 @@ struct HomeView: View {
             MainBackgroundView()
             VStack {
                 //Top profile bar
-                UserProfileBarView(userProfile: userProfile)
+                UserProfileBarView(userProfile: commonGround.userProfile)
 
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 32) {
@@ -45,7 +44,7 @@ struct HomeView: View {
                             !favoriteStylists.isEmpty
                         {
                             FavoriteTabView(
-                                userProfile: userProfile,
+                                userProfile: commonGround.userProfile,
                                 favoriteStylists: favoriteStylists
                             )
                         }
@@ -155,7 +154,8 @@ struct HomeView: View {
 
                                 ScrollView(.vertical, showsIndicators: false) {
                                     ForEach(
-                                        searchManager.suggestions, id: \.title
+                                        searchManager.suggestions,
+                                        id: \.title
                                     ) {
                                         suggestion in
                                         SearchItemView(
@@ -206,7 +206,6 @@ struct HomeView: View {
     private func getHomeData() {
         Task {
             isLoading = true
-            await getProfileData()
             await getFavoriteStylists()
             await getNearByStylists()
             await getTopRatedStylists()
@@ -264,7 +263,9 @@ struct HomeView: View {
             searchedStylists =
                 try await homeViewModel
                 .getNearByStylists(
-                    lat: lat, log: log)
+                    lat: lat,
+                    log: log
+                )
         } catch NetworkError.notAuthorized {
             commonGround.logout()
             commonGround.routes
@@ -286,7 +287,9 @@ struct HomeView: View {
             nearByStylists =
                 try await homeViewModel
                 .getNearByStylists(
-                    lat: 37.75826042644298, log: -122.43800997698538)
+                    lat: 37.75826042644298,
+                    log: -122.43800997698538
+                )
         } catch NetworkError.notAuthorized {
             commonGround.logout()
             commonGround.routes
@@ -307,26 +310,6 @@ struct HomeView: View {
             favoriteStylists =
                 try await homeViewModel
                 .getFavoriteStylists()
-        } catch NetworkError.notAuthorized {
-            commonGround.logout()
-            commonGround.routes
-                .append(
-                    Route.mainLogin
-                )
-        } catch {
-            showAlert(
-                message:
-                    "Sorry!, Something went wrong. Please try again later."
-            )
-        }
-    }
-
-    //to get the basic profile data
-    private func getProfileData() async {
-        do {
-            userProfile =
-                try await homeViewModel
-                .getUserProfile()
         } catch NetworkError.notAuthorized {
             commonGround.logout()
             commonGround.routes

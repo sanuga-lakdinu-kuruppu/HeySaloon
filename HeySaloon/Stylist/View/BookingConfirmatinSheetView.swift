@@ -4,6 +4,8 @@ struct BookingConfirmatinSheetView: View {
 
     @ObservedObject var commonGround: CommonGround
     @Binding var isShowBookingConfirmationSheet: Bool
+    @Binding var isShowBookingIndetailsSheet: Bool
+    @Binding var isShowingServiceSheet: Bool
     @Binding var grandTotal: Double
     @Binding var selectedServices: [ServiceModel]
     @Binding var queuedAt: Int
@@ -178,6 +180,11 @@ struct BookingConfirmatinSheetView: View {
                 stylist: stylist,
                 selectedServices: selectedServices
             )
+
+            //clearing
+            clearAfterBookingCreation()
+            isShowingServiceSheet = false
+            isShowBookingIndetailsSheet.toggle()
         } catch NetworkError.notAuthorized {
             commonGround.logout()
             commonGround.routes
@@ -195,6 +202,14 @@ struct BookingConfirmatinSheetView: View {
                     "Sorry!, Something went wrong. Please try again later."
             )
         }
+    }
+
+    private func clearAfterBookingCreation() {
+        queuedAt = 0
+        serviceTime = 0
+        finishTime = ""
+        grandTotal = 0
+        selectedServices = []
     }
 }
 

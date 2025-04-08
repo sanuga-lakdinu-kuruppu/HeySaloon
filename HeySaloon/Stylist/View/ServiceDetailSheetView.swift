@@ -10,6 +10,7 @@ struct ServiceDetailSheetView: View {
     @Binding var queuedAt: Int
     @Binding var finishTime: String
     @Binding var serviceTime: Int
+    @Binding var createdBooking: BookingModel?
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
     let stylistViewModel: StylistViewModel = StylistViewModel.shared
 
@@ -59,16 +60,21 @@ struct ServiceDetailSheetView: View {
                         }
 
                         //join queue button
-                        Button {
-                            clickJoinQueue()
-                        } label: {
-                            MainButtonView(
-                                text: "Join the Queue (LKR \(grandTotal))",
-                                foregroundColor: Color("MainBackgroundColor"),
-                                backgroundColor: .accent,
-                                isBoarder: false
-                            )
+                        if createdBooking == nil {
+                            Button {
+                                clickJoinQueue()
+                            } label: {
+                                MainButtonView(
+                                    text: "Join the Queue (LKR \(grandTotal))",
+                                    foregroundColor: Color(
+                                        "MainBackgroundColor"
+                                    ),
+                                    backgroundColor: .accent,
+                                    isBoarder: false
+                                )
+                            }
                         }
+
                     } else {
                         CaptionTextView(
                             text:
