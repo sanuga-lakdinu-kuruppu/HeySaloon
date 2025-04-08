@@ -26,7 +26,7 @@ struct ProfileDetailsView: View {
             AsyncImage(
                 url: URL(
                     string:
-                        "https://miro.medium.com/v2/resize:fit:1400/0*1WJiB8mUJKcylomi.jpg"
+                        stylist.imageUrl
                 )
             ) { Image in
                 Image
