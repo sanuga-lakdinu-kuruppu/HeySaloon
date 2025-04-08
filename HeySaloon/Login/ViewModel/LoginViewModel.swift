@@ -77,6 +77,12 @@ class LoginViewModel {
                     CommonGround.shared.role =
                         emailOtpVerifyResponse.data!.role!
                     CommonGround.shared.isLoggedIn = true
+
+                    CommonGround.shared.userProfile = UserProfileModel(
+                        firstName: emailOtpVerifyResponse.data!.firstName!,
+                        lastName: emailOtpVerifyResponse.data!.lastName!,
+                        imageUrl: emailOtpVerifyResponse.data!.imageUrl!
+                    )
                     CommonGround.shared.saveUserDefaults()
 
                     NotificationManager.shared

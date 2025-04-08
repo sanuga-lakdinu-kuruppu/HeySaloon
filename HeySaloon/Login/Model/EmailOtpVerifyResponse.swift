@@ -11,4 +11,7 @@ struct TokenData: Codable {
     let refreshToken: String?
     let idToken: String?
     let role: Role?
+    let firstName: String?
+    let lastName: String?
+    let imageUrl: String?
 }

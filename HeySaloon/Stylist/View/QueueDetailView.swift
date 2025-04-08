@@ -3,6 +3,8 @@ import SwiftUI
 struct QueueDetailView: View {
 
     var stylist: StylistModel
+    @Binding var createdBooking: BookingModel?
+    @Binding var isShowBookingIndetailsSheet: Bool
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
     @State var screenHeight: CGFloat = UIScreen.main.bounds.height
 
@@ -15,7 +17,8 @@ struct QueueDetailView: View {
 
                     VStack(alignment: .leading, spacing: screenwidth * 0.02) {
                         CaptionTextView(
-                            text: "\(stylist.totalQueued) People Queued")
+                            text: "\(stylist.totalQueued) People Queued"
+                        )
                         CaptionTextView(
                             text:
                                 "Wait \(SupportManager.shared.getTimeDifference(finishTime: stylist.finishedAt)) min (\(SupportManager.shared.getFinishTime(finishTime: stylist.finishedAt)))"
@@ -23,11 +26,14 @@ struct QueueDetailView: View {
                     }
                     Spacer()
 
-                    Button {
-                        print("View button clicked")
-                    } label: {
-                        ViewButtonView()
+                    if createdBooking != nil {
+                        Button {
+                            isShowBookingIndetailsSheet.toggle()
+                        } label: {
+                            ViewButtonView()
+                        }
                     }
+
                 }
                 Spacer()
             }
