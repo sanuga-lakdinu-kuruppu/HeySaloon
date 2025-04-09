@@ -28,11 +28,14 @@ struct HeySaloonApp: App {
                         } else if destination == Route.stylistIndetail {
                             StylistIndetailView(
                                 commonGround: commonGround,
-                                stylist: CommonGround.shared.selectedStylist!)
+                                stylist: CommonGround.shared.selectedStylist!
+                            )
                         } else if destination == Route.mainLogin {
                             MainLoginView(
                                 commonGround: commonGround
                             )
+                        } else if destination == Route.ar {
+                            ArView()
                         }
 
                     }

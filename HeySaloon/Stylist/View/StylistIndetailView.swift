@@ -49,6 +49,7 @@ struct StylistIndetailView: View {
                 Spacer()
                 VStack(spacing: screenwidth * 0.08) {
                     FuctionListView(
+                        commonGround: commonGround,
                         isShowingServiceSheet: $isShowingServiceSheet,
                         isShowingPortfolioSheet: $isShowingPortfolioSheet
                     )
