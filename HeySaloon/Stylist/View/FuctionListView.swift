@@ -2,6 +2,7 @@ import SwiftUI
 
 struct FuctionListView: View {
 
+    @ObservedObject var commonGround: CommonGround
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
     @Binding var isShowingServiceSheet: Bool
     @Binding var isShowingPortfolioSheet: Bool
@@ -11,11 +12,13 @@ struct FuctionListView: View {
             HStack {
 
                 Button {
-
+                    commonGround.routes
+                        .append(Route.ar)
                 } label: {
                     FuctionButtonView(
                         icon: "arkit",
-                        text: "Try On")
+                        text: "Try On"
+                    )
                 }
 
                 Button {
@@ -23,7 +26,8 @@ struct FuctionListView: View {
                 } label: {
                     FuctionButtonView(
                         icon: "list.clipboard.fill",
-                        text: "Services")
+                        text: "Services"
+                    )
                 }
 
                 Button {
@@ -31,7 +35,8 @@ struct FuctionListView: View {
                 } label: {
                     FuctionButtonView(
                         icon: "folder.fill.badge.person.crop",
-                        text: "Portfolio")
+                        text: "Portfolio"
+                    )
                 }
 
                 Button {
@@ -39,7 +44,8 @@ struct FuctionListView: View {
                 } label: {
                     FuctionButtonView(
                         icon: "location.fill",
-                        text: "Direction")
+                        text: "Direction"
+                    )
                 }
 
                 Spacer()
@@ -53,7 +59,8 @@ struct FuctionListView: View {
                 } label: {
                     FuctionButtonView(
                         icon: "person.2.wave.2",
-                        text: "Reviews")
+                        text: "Reviews"
+                    )
                 }
 
                 Button {
@@ -61,7 +68,8 @@ struct FuctionListView: View {
                 } label: {
                     FuctionButtonView(
                         icon: "square.and.arrow.up.fill",
-                        text: "Share")
+                        text: "Share"
+                    )
                 }
 
                 Button {
@@ -69,7 +77,8 @@ struct FuctionListView: View {
                 } label: {
                     FuctionButtonView(
                         icon: "phone.fill",
-                        text: "Call")
+                        text: "Call"
+                    )
                 }
 
                 Spacer()

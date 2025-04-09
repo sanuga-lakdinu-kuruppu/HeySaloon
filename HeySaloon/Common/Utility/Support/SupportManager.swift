@@ -3,6 +3,63 @@ import SwiftUI
 class SupportManager {
     static let shared = SupportManager()
 
+    let arModelList: [ArModel] = [
+        .init(
+            name: "Crew Cut",
+            modelName: "firstCutOriginal",
+            imageName: "imageFirstCutOriginal",
+            xValue: 0,
+            yValue: -0.02,
+            zValue: -0.05,
+            isPro: false
+        ),
+        .init(
+            name: "Buzz Cut",
+            modelName: "secondCutOriginal",
+            imageName: "imageSecondCutOriginal",
+            xValue: 0,
+            yValue: -0.197,
+            zValue: -0.02,
+            isPro: false
+        ),
+        .init(
+            name: "O Cut",
+            modelName: "secondCutOriginal",
+            imageName: "imageSecondCutOriginal",
+            xValue: 0,
+            yValue: -0.197,
+            zValue: -0.02,
+            isPro: true
+        ),
+        .init(
+            name: "Wix Cut",
+            modelName: "secondCutOriginal",
+            imageName: "imageSecondCutOriginal",
+            xValue: 0,
+            yValue: -0.197,
+            zValue: -0.02,
+            isPro: true
+        ),
+        .init(
+            name: "Lia Cut",
+            modelName: "secondCutOriginal",
+            imageName: "imageSecondCutOriginal",
+            xValue: 0,
+            yValue: -0.197,
+            zValue: -0.02,
+            isPro: true
+        ),
+        .init(
+            name: "Yoa Cut",
+            modelName: "secondCutOriginal",
+            imageName: "imageSecondCutOriginal",
+            xValue: 0,
+            yValue: -0.197,
+            zValue: -0.02,
+            isPro: true
+        ),
+    ]
+
     private init() {}
 
     //to convert the time string to the desired format
