@@ -8,4 +8,5 @@ enum Route: String {
     case commonTab = "CommonTab"
     case stylistIndetail = "StylistIndetail"
     case home = "Home"
+    case ar = "AR"
 }
