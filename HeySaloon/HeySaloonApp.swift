@@ -5,9 +5,9 @@ struct HeySaloonApp: App {
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var commonGround = CommonGround.shared
+    @StateObject private var sharedLocationManager = LocationManager()
 
     init() {
-        LocationManager.shared.requestWhenInUseAuthorization()
         NotificationManager.shared.requestPermission()
     }
 
@@ -36,6 +36,11 @@ struct HeySaloonApp: App {
                             )
                         } else if destination == Route.ar {
                             ArView()
+                        } else if destination == Route.direction {
+                            StylistMapView(
+                                commonGround: commonGround,
+                                sharedLocationManager: sharedLocationManager
+                            )
                         }
 
                     }

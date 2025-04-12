@@ -93,4 +93,16 @@ class SupportManager {
             return 0
         }
     }
+
+    //getIcon in map view
+    func getIcon(instruction: String) -> String {
+        let lowercased = instruction.lowercased()
+        if lowercased.contains("left") {
+            return "arrow.turn.up.left"
+        } else if lowercased.contains("right") {
+            return "arrow.turn.up.right"
+        } else {
+            return "app.connected.to.app.below.fill"
+        }
+    }
 }
