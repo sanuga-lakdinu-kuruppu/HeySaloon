@@ -287,8 +287,8 @@ struct HomeView: View {
             nearByStylists =
                 try await homeViewModel
                 .getNearByStylists(
-                    lat: 37.75826042644298,
-                    log: -122.43800997698538
+                    lat: 7.16870166326981,
+                    log: 79.88376611833456
                 )
         } catch NetworkError.notAuthorized {
             commonGround.logout()

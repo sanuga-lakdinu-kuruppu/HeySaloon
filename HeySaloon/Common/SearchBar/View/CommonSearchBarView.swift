@@ -4,17 +4,21 @@ struct CommonSearchBarView: View {
 
     @Binding var searchText: String
     var hint: String
+    var isDisabled: Bool = false
 
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.hint)
             TextField(
-                "", text: $searchText,
+                "",
+                text: $searchText,
                 prompt: Text(hint)
                     .font(.callout)
-                    .foregroundColor(Color("HintColor")))
-            if !searchText.isEmpty {
+                    .foregroundColor(Color("HintColor"))
+            )
+            .disabled(isDisabled)
+            if !searchText.isEmpty && !isDisabled {
                 Button {
                     searchText = ""
                 } label: {

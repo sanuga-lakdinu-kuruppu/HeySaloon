@@ -9,4 +9,5 @@ enum Route: String {
     case stylistIndetail = "StylistIndetail"
     case home = "Home"
     case ar = "AR"
+    case direction = "Direction"
 }
