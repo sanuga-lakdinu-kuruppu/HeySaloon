@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct StylistModel: Codable {
+struct StylistModel: Identifiable, Codable {
     var _id: String
     var stylistId: Int
     var firstName: String
@@ -17,6 +17,8 @@ struct StylistModel: Codable {
     var totalQueued: Int
     var finishedAt: String
     var services: [ServiceModel]
+
+    var id: String { _id }
 }
 
 struct Location: Codable {

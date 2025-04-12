@@ -40,7 +40,8 @@ struct FuctionListView: View {
                 }
 
                 Button {
-
+                    commonGround.routes
+                        .append(Route.direction)
                 } label: {
                     FuctionButtonView(
                         icon: "location.fill",
