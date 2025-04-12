@@ -136,6 +136,12 @@ struct StylistIndetailView: View {
                 )
             }
         }
+        .sheet(isPresented: $isShowingPortfolioSheet) {
+            PortfolioSheetView(
+                stylist: stylist,
+                isShowingPortfolioSheet: $isShowingPortfolioSheet
+            )
+        }
     }
 
     private func getAppointment() {
@@ -199,6 +205,15 @@ struct StylistIndetailView: View {
                     price: 900.00,
                     minutes: 15
                 ),
+            ],
+            portfolio: [
+                .init(
+                    id: 1,
+                    message: "Buzz Cut",
+                    imageUrl:
+                        "https://images.unsplash.com/photo-1647140655214-e4a2d914971f?q=80&w=3165&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    likes: [323, 32, 31, 42]
+                )
             ]
         )
     )

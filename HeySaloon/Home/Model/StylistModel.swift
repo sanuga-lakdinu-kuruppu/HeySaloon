@@ -17,6 +17,7 @@ struct StylistModel: Identifiable, Codable {
     var totalQueued: Int
     var finishedAt: String
     var services: [ServiceModel]
+    var portfolio: [PortfolioModel]
 
     var id: String { _id }
 }
