@@ -106,7 +106,16 @@ struct ProfileDetailsView: View {
                     price: 900.00,
                     minutes: 15
                 ),
+            ],
+            portfolio: [
+                .init(
+                    id: 1,
+                    message: "Buzz Cut",
+                    imageUrl: "",
+                    likes: [323, 32, 31, 42]
+                )
             ]
+
         )
     )
 }

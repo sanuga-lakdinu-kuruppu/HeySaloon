@@ -35,7 +35,9 @@ struct BookingIndetailSheetView: View {
 
                                 //direction button
                                 Button {
-
+                                    isShowBookingIndetailsSheet.toggle()
+                                    commonGround.routes
+                                        .append(Route.direction)
                                 } label: {
                                     MainButtonView(
                                         text: "Get Me To This Saloon",
@@ -282,7 +284,17 @@ struct BookingIndetailPreview: View {
                 price: 900.00,
                 minutes: 15
             ),
+
+        ],
+        portfolio: [
+            .init(
+                id: 1,
+                message: "Buzz Cut",
+                imageUrl: "",
+                likes: [323, 32, 31, 42]
+            )
         ]
+
     )
 
     var body: some View {
