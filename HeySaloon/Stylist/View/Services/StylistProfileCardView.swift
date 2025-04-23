@@ -3,6 +3,12 @@ import SwiftUI
 struct StylistProfileCardView: View {
 
     var booking: BookingModel?
+    var isShowStatus: Bool = true
+    var backgroundColor: Color = .white
+    var nameColor: Color = .mainBackground
+    var saloonColor: Color = .accentColor
+    var ratingColor: Color = .mainBackground
+    var startColor: Color = .accentColor
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
 
     var body: some View {
@@ -18,42 +24,44 @@ struct StylistProfileCardView: View {
                         text: [stylist.firstName, stylist.lastName]
                             .compactMap { $0 }
                             .joined(separator: " "),
-                        foregroundColor: .mainBackground
+                        foregroundColor: nameColor
                     )
 
                     CaptionTextView(
                         text: "From \(booking.stylist?.saloonName ?? "")",
-                        foregroundColor: .accent
+                        foregroundColor: saloonColor
                     )
 
                     HStack {
                         Image(systemName: "star.fill")
-                            .foregroundColor(Color("AccentColor"))
+                            .foregroundColor(startColor)
                         CaptionTextView(
                             text:
                                 "\(stylist.currentRating ?? 0.0)(\(booking.stylist?.totalReviewed ?? 0))",
-                            foregroundColor: .mainBackground
+                            foregroundColor: ratingColor
                         )
 
-                        HStack {
-                            Circle()
-                                .frame(
-                                    width: screenwidth * 0.04,
-                                    height: screenwidth * 0.04
-                                )
-                                .foregroundColor(
-                                    getColorCode(
-                                        status: booking.status
+                        if isShowStatus {
+                            HStack {
+                                Circle()
+                                    .frame(
+                                        width: screenwidth * 0.04,
+                                        height: screenwidth * 0.04
                                     )
-                                )
-                            CaptionTextView(
-                                text:
+                                    .foregroundColor(
+                                        getColorCode(
+                                            status: booking.status
+                                        )
+                                    )
+                                CaptionTextView(
+                                    text:
 
-                                    booking.status,
-                                foregroundColor: .mainBackground
-                            )
+                                        booking.status,
+                                    foregroundColor: .mainBackground
+                                )
+                            }
+                            .padding(.leading, screenwidth * 0.04)
                         }
-                        .padding(.leading, screenwidth * 0.04)
 
                     }
                 }
@@ -84,8 +92,8 @@ struct StylistProfileCardView: View {
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .background(.white)
-        .cornerRadius(screenwidth * 0.05)
+        .background(backgroundColor)
+        .cornerRadius(screenwidth * 0.06)
     }
 
     func getColorCode(status: String) -> Color {
