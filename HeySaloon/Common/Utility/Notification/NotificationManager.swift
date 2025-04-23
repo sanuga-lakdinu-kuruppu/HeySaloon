@@ -13,19 +13,27 @@ class NotificationManager {
         ) { _, _ in }
     }
 
-    func sendInstantNotifcation(title: String, body: String) {
+    func sendInstantNotifcation(
+        title: String,
+        body: String,
+        isInstant: Bool = false
+    ) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
         content.sound = .default
 
         let trigger = UNTimeIntervalNotificationTrigger(
-            timeInterval: 5, repeats: false)
+            timeInterval: isInstant ? 1 : 5,
+            repeats: false
+        )
 
         UNUserNotificationCenter.current().add(
             UNNotificationRequest(
-                identifier: "InstantNotification", content: content,
-                trigger: trigger),
+                identifier: "InstantNotification",
+                content: content,
+                trigger: trigger
+            ),
             withCompletionHandler: nil
         )
     }

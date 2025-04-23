@@ -6,10 +6,12 @@ struct MainLoginView: View {
     @State var screenHeight: CGFloat = UIScreen.main.bounds.height
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
     @State var isShowingBottomSheet: Bool = false
+    @State var isShowingFaceIdSheet: Bool = false
     @State var offSet: CGFloat = 0
     @State var scale: CGFloat = 1.0
     let tag: String =
         "Easiest way of locating near by stylists. Locate, Book and try the online booking experience of walking clients."
+    @StateObject var faceIDManager = FaceIDManager()
 
     var body: some View {
         ZStack {
@@ -17,7 +19,8 @@ struct MainLoginView: View {
             VStack {
                 Image("Logo")
                     .padding(
-                        .top, offSet
+                        .top,
+                        offSet
                     )
                     .scaleEffect(scale)
                 Spacer()
@@ -100,6 +103,61 @@ struct MainLoginView: View {
             .interactiveDismissDisabled(true)
             .presentationDragIndicator(.hidden)
         }
+        .sheet(isPresented: $isShowingFaceIdSheet) {
+            VStack {
+
+                VStack(spacing: screenwidth * 0.04) {
+                    TitleTextView(text: "App Locked")
+                    CaptionTextView(text: "Unlock with Face ID")
+                }
+                .padding(.top, screenwidth * 0.08)
+
+                Spacer()
+
+                VStack(spacing: screenwidth * 0.04) {
+                    Image(systemName: "faceid")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.white)
+                        .frame(
+                            width: screenwidth * 0.13,
+                            height: screenwidth * 0.13
+                        )
+                    CaptionTextView(text: "Face ID")
+                }
+                .frame(
+                    width: screenwidth * 0.5,
+                    height: screenwidth * 0.5
+                )
+                .background(.hint)
+                .cornerRadius(screenwidth * 0.04)
+
+                Spacer()
+
+                Button {
+                    faceIDManager.authenticate()
+                    showBottomSheetAfterDelay()
+                } label: {
+                    MainButtonView(
+                        text: "Use Face ID",
+                        foregroundColor: Color.black,
+                        backgroundColor: Color.white,
+                        isBoarder: false
+                    )
+                }
+                .padding(.bottom, screenwidth * 0.04)
+            }
+            .onAppear {
+                faceIDManager.authenticate()
+                showBottomSheetAfterDelay()
+            }
+            .padding(.horizontal, screenwidth * 0.05)
+            .presentationDetents([.fraction(0.6)])
+            .presentationCornerRadius(50)
+            .presentationBackground(Color("SecondaryBackgroundColor"))
+            .interactiveDismissDisabled(true)
+            .presentationDragIndicator(.hidden)
+        }
         .navigationBarBackButtonHidden(true)
 
     }
@@ -115,6 +173,7 @@ struct MainLoginView: View {
 
     //delay 1.5s the bottom sheet showing after showing the main screen
     private func showBottomSheetAfterDelay() {
+
         commonGround.getUserDefaults()
         if commonGround.commingFrom == Route.mainApp {
             offSet = screenHeight * 0.3
@@ -122,10 +181,17 @@ struct MainLoginView: View {
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 if commonGround.isLoggedIn {
-                    commonGround.routes
-                        .append(
-                            Route.commonTab
-                        )
+                    //already logged in
+                    if faceIDManager.isAuthenticated {
+                        isShowingFaceIdSheet = false
+                        commonGround.routes
+                            .append(
+                                Route.commonTab
+                            )
+                    } else {
+                        isShowingFaceIdSheet = true
+                    }
+
                 } else {
                     withAnimation(.easeInOut(duration: 0.3)) {
                         offSet = screenHeight * 0.15
