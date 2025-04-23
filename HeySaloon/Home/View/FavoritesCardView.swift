@@ -46,7 +46,7 @@ struct FavoritesCardView: View {
                     foregroundColor: .mainBackground
                 )
                 CaptionTextView(
-                    text: "From \(stylist.saloonName)",
+                    text: "From \(stylist.saloonName ?? "")",
                     foregroundColor: .mainBackground
                 )
                 Spacer()
@@ -56,12 +56,13 @@ struct FavoritesCardView: View {
                     Image(systemName: "star.fill")
                         .foregroundColor(Color("AccentColor"))
                     CaptionTextView(
-                        text: "\(stylist.rating)(\(stylist.totalRating))",
+                        text:
+                            "\(stylist.currentRating ?? 0.0)(\(stylist.totalReviewed ?? 0))",
                         foregroundColor: .hint
                     )
                     CaptionTextView(
-                        text: stylist.isOpen ? "Open Now" : "Closed",
-                        foregroundColor: stylist.isOpen
+                        text: stylist.isOpen ?? false ? "Open Now" : "Closed",
+                        foregroundColor: stylist.isOpen ?? false
                             ? Color("AccentColor") : .error
                     )
                 }
@@ -83,40 +84,11 @@ struct FavoritesCardView: View {
 #Preview {
     FavoritesCardView(
         stylist: .init(
-            _id: "fds",
-            stylistId: 432,
-            firstName: "jfadls",
-            lastName: "kjladfs",
-            thumbnailUrl: "fjdalks",
-            imageUrl: "fkjadls",
-            saloonName: "jfdslake",
-            location: .init(coordinates: [3, 3]),
-            rating: 432.423,
-            totalRating: 23,
-            isOpen: true,
-            start: "42",
-            end: "ffds",
-            totalQueued: 22,
-            finishedAt: "2024-03-28T16:30:00.000Z",
-            services: [
-                .init(id: 1, name: "Crew Cut", price: 1200.00, minutes: 25),
-                .init(id: 2, name: "Buzz Cut", price: 1300.00, minutes: 30),
-                .init(
-                    id: 3,
-                    name: "Beard Trim & Shaping",
-                    price: 900.00,
-                    minutes: 15
-                ),
-            ],
-            portfolio: [
-                .init(
-                    id: 1,
-                    message: "Buzz Cut",
-                    imageUrl: "",
-                    likes: [323, 32, 31, 42]
-                )
-            ]
-
+            stylistId: "",
+            firstName: "",
+            lastName: "",
+            profileUrl: "",
+            thumbnailUrl: ""
         )
     )
 }

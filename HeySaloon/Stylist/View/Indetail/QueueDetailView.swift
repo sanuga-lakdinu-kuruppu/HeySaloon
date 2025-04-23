@@ -2,9 +2,7 @@ import SwiftUI
 
 struct QueueDetailView: View {
 
-    var stylist: StylistModel
-    @Binding var createdBooking: BookingModel?
-    @Binding var isShowBookingIndetailsSheet: Bool
+    var stylist: StylistModel?
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
     @State var screenHeight: CGFloat = UIScreen.main.bounds.height
 
@@ -16,23 +14,19 @@ struct QueueDetailView: View {
                     CircleIconView(icon: "clock.fill")
 
                     VStack(alignment: .leading, spacing: screenwidth * 0.02) {
-                        CaptionTextView(
-                            text: "\(stylist.totalQueued) People Queued"
-                        )
-                        CaptionTextView(
-                            text:
-                                "Wait \(SupportManager.shared.getTimeDifference(finishTime: stylist.finishedAt)) min (\(SupportManager.shared.getFinishTime(finishTime: stylist.finishedAt)))"
-                        )
+                        if let stylist = stylist {
+                            CaptionTextView(
+                                text:
+                                    "\(stylist.totalQueued ?? 0) People Queued"
+                            )
+                            CaptionTextView(
+                                text:
+                                    "Wait \(SupportManager.shared.getTimeDifference(finishTime: stylist.queueWillEnd ?? "")) min (\(SupportManager.shared.getFinishTime(finishTime: stylist.queueWillEnd ?? "")))"
+                            )
+                        }
+
                     }
                     Spacer()
-
-                    if createdBooking != nil {
-                        Button {
-                            isShowBookingIndetailsSheet.toggle()
-                        } label: {
-                            ViewButtonView()
-                        }
-                    }
 
                 }
                 Spacer()

@@ -10,7 +10,7 @@ struct FavoriteTabView: View {
             HStack {
                 HeadlineTextView(
                     text:
-                        "\(userProfile?.firstName ?? "Guest")'s Favorites"
+                        "\(userProfile?.firstName.isEmpty == false ? userProfile!.firstName : "Guest")'s Favorites"
                 )
 
                 Spacer()
@@ -25,7 +25,7 @@ struct FavoriteTabView: View {
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    ForEach(favoriteStylists, id: \._id) {
+                    ForEach(favoriteStylists, id: \.stylistId) {
                         stylist in
                         FavoritesCardView(stylist: stylist)
                     }

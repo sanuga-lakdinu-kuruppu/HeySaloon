@@ -4,19 +4,16 @@ struct BookingConfirmatinSheetView: View {
 
     @ObservedObject var commonGround: CommonGround
     @Binding var isShowBookingConfirmationSheet: Bool
-    @Binding var isShowBookingIndetailsSheet: Bool
     @Binding var isShowingServiceSheet: Bool
-    @Binding var grandTotal: Double
-    @Binding var selectedServices: [ServiceModel]
-    @Binding var queuedAt: Int
-    @Binding var finishTime: String
-    @Binding var serviceTime: Int
-    @Binding var stylist: StylistModel
+    @Binding var isShowBookingIndetailsSheet: Bool
+    @Binding var booking: BookingModel?
+    @Binding var stylist: StylistModel?
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
+    let supportManager: SupportManager = SupportManager.shared
+    let stylistViewModel: StylistViewModel = StylistViewModel.shared
     @State var isLoading: Bool = false
-    @State var alertMessage: String = ""
     @State var isShowAlert: Bool = false
-    @Binding var createdBooking: BookingModel?
+    @State var alertMessage: String = ""
 
     var body: some View {
         ZStack {
@@ -29,22 +26,23 @@ struct BookingConfirmatinSheetView: View {
                     )
 
                     VStack(spacing: screenwidth * 0.04) {
-                        if !selectedServices.isEmpty {
+                        if let booking = booking {
 
                             //Meta data
                             VStack(spacing: 0) {
                                 CommonListItemView(
                                     title: "Queued at",
-                                    value: "\(queuedAt) st"
+                                    value: "\(booking.queuedAt)"
                                 )
                                 CommonListItemView(
                                     title: "Need to wait",
                                     value:
-                                        "\(SupportManager.shared.getTimeDifference(finishTime: finishTime)) min (until \(SupportManager.shared.getFinishTime(finishTime: finishTime)))"
+                                        "\(supportManager.getTimeDifference(finishTime: booking.estimatedStarting)) min (until \(supportManager.getFinishTime(finishTime: booking.estimatedStarting)))"
                                 )
                                 CommonListItemView(
                                     title: "Service will take",
-                                    value: "Aprox. \(serviceTime) min"
+                                    value:
+                                        "Aprox. \(booking.serviceWillTake) min"
                                 )
                             }
                             .padding(.horizontal, screenwidth * 0.05)
@@ -64,13 +62,16 @@ struct BookingConfirmatinSheetView: View {
                             //selected services list
                             ScrollView(.vertical, showsIndicators: false) {
                                 VStack(spacing: 0) {
-                                    ForEach(selectedServices) {
+                                    ForEach(
+                                        booking.servicesSelected,
+                                        id: \.serviceId
+                                    ) {
                                         selectedService in
 
                                         CommonListItemView(
-                                            title: selectedService.name,
+                                            title: selectedService.serviceName,
                                             value:
-                                                "LKR \(selectedService.price)"
+                                                "LKR \(selectedService.serviceCost)"
                                         )
 
                                     }
@@ -79,13 +80,14 @@ struct BookingConfirmatinSheetView: View {
                                 .frame(maxWidth: .infinity)
                                 .background(Color("SecondaryBackgroundColor"))
                                 .cornerRadius(
-                                    selectedServices.count == 1
+                                    booking.servicesSelected.count == 1
                                         ? screenwidth * 0.05
                                         : screenwidth * 0.08
                                 )
                                 .overlay(
                                     RoundedRectangle(
-                                        cornerRadius: selectedServices.count
+                                        cornerRadius: booking.servicesSelected
+                                            .count
                                             == 1
                                             ? screenwidth * 0.05
                                             : screenwidth * 0.08
@@ -101,7 +103,7 @@ struct BookingConfirmatinSheetView: View {
                             VStack(spacing: 0) {
                                 CommonListItemView(
                                     title: "Grand Total",
-                                    value: "LKR \(grandTotal)"
+                                    value: "LKR \(booking.serviceTotal)"
                                 )
                             }
                             .padding(.horizontal, screenwidth * 0.05)
@@ -138,7 +140,7 @@ struct BookingConfirmatinSheetView: View {
                         } else {
                             CaptionTextView(
                                 text:
-                                    "No selected services found"
+                                    "No booking found"
                             )
                         }
                     }
@@ -176,15 +178,15 @@ struct BookingConfirmatinSheetView: View {
     //creation of a booking
     private func createBooking() async {
         do {
-            createdBooking = try await StylistViewModel.shared.createBooking(
-                stylist: stylist,
-                selectedServices: selectedServices
+            booking = try await stylistViewModel.createBooking(
+                stylist: stylist!,
+                booking: booking!
             )
-
             //clearing
-            clearAfterBookingCreation()
+
             isShowingServiceSheet = false
-            isShowBookingIndetailsSheet.toggle()
+            isShowBookingIndetailsSheet = true
+
         } catch NetworkError.notAuthorized {
             commonGround.logout()
             commonGround.routes
@@ -202,14 +204,6 @@ struct BookingConfirmatinSheetView: View {
                     "Sorry!, Something went wrong. Please try again later."
             )
         }
-    }
-
-    private func clearAfterBookingCreation() {
-        queuedAt = 0
-        serviceTime = 0
-        finishTime = ""
-        grandTotal = 0
-        selectedServices = []
     }
 }
 

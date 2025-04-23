@@ -3,75 +3,66 @@ import SwiftUI
 struct StylistIndetailView: View {
 
     @ObservedObject var commonGround: CommonGround
-    @State var stylist: StylistModel
+    var stylistId: String
+    let stylistViewModel: StylistViewModel = StylistViewModel.shared
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
     @State var screenHeight: CGFloat = UIScreen.main.bounds.height
+    @State var stylist: StylistModel? = nil
     @State var isShowingServiceSheet: Bool = false
-    @State var isShowingPortfolioSheet: Bool = false
     @State var isShowBookingConfirmationSheet: Bool = false
     @State var isShowBookingIndetailsSheet: Bool = false
     @State var isShowCancelSheet: Bool = false
-    @State var selectedServices: [ServiceModel] = []
-    @State var grandTotal: Double = 0.00
-    @State var queuedAt: Int = 0
-    @State var finishTime: String = ""
-    @State var serviceTime: Int = 0
-    @State var createdBooking: BookingModel? = nil
+    @State var isShowingPortfolioSheet: Bool = false
     @State var isLoading: Bool = false
-    @State var alertMessage: String = ""
     @State var isShowAlert: Bool = false
-    let stylistViewModel: StylistViewModel = StylistViewModel.shared
+    @State var alertMessage: String = ""
+    @State var booking: BookingModel? = nil
 
     var body: some View {
         ZStack {
+            MainBackgroundView()
+            if let stylist = stylist {
+                //1st layer
+                ImageBackgroundView(imageUrl: stylist.thumbnailUrl)
 
-            //1st layer
-            ImageBackgroundView(
-                imageUrl:
-                    stylist.thumbnailUrl
-            )
+                //2nd layer
+                GradientColorView()
 
-            //2nd layer
-            GradientColorView()
+                //3rd layer
+                ProfileDetailsView(stylist: stylist)
 
-            //3rd layer
-            ProfileDetailsView(stylist: stylist)
+                //4th layer
+                QueueDetailView(stylist: stylist)
 
-            //4th layer
-            QueueDetailView(
-                stylist: stylist,
-                createdBooking: $createdBooking,
-                isShowBookingIndetailsSheet: $isShowBookingIndetailsSheet
-            )
-
-            //5th layer
-            VStack {
-                Spacer()
-                VStack(spacing: screenwidth * 0.08) {
-                    FuctionListView(
-                        commonGround: commonGround,
-                        isShowingServiceSheet: $isShowingServiceSheet,
-                        isShowingPortfolioSheet: $isShowingPortfolioSheet
-                    )
-
-                    SaloonDetailView()
-
+                //5th layer
+                VStack {
                     Spacer()
-                }
-                .padding(.vertical, screenwidth * 0.08)
-                .padding(.horizontal, screenwidth * 0.05)
-                .frame(width: screenwidth, height: screenHeight * 0.48)
-                .background(Color("MainBackgroundColor"))
-                .clipShape(
-                    .rect(
-                        topLeadingRadius: 50,
-                        bottomLeadingRadius: 0,
-                        bottomTrailingRadius: 0,
-                        topTrailingRadius: 50
+                    VStack(spacing: screenwidth * 0.08) {
+                        FuctionListView(
+                            commonGround: commonGround,
+                            isShowingServiceSheet: $isShowingServiceSheet,
+                            isShowingPortfolioSheet: $isShowingPortfolioSheet
+                        )
+
+                        SaloonDetailView(stylist: stylist)
+
+                        Spacer()
+                    }
+                    .padding(.vertical, screenwidth * 0.08)
+                    .padding(.horizontal, screenwidth * 0.05)
+                    .frame(width: screenwidth, height: screenHeight * 0.48)
+                    .background(Color("MainBackgroundColor"))
+                    .clipShape(
+                        .rect(
+                            topLeadingRadius: 50,
+                            bottomLeadingRadius: 0,
+                            bottomTrailingRadius: 0,
+                            topTrailingRadius: 50
+                        )
                     )
-                )
+                }
+                .ignoresSafeArea()
             }
-            .ignoresSafeArea()
 
             if isLoading {
                 CommonProgressView()
@@ -85,7 +76,7 @@ struct StylistIndetailView: View {
             Button("OK", role: .cancel) {}
         }
         .onAppear {
-            getAppointment()
+            getStylistIndetailData()
         }
         .onDisappear {
             commonGround.commingFrom = Route.stylistIndetail
@@ -94,28 +85,18 @@ struct StylistIndetailView: View {
             ServiceDetailSheetView(
                 isShowingServiceSheet: $isShowingServiceSheet,
                 isShowBookingConfirmationSheet: $isShowBookingConfirmationSheet,
-                grandTotal: $grandTotal,
                 stylist: $stylist,
-                selectedServices: $selectedServices,
-                queuedAt: $queuedAt,
-                finishTime: $finishTime,
-                serviceTime: $serviceTime,
-                createdBooking: $createdBooking
+                booking: $booking
             )
             .sheet(isPresented: $isShowBookingConfirmationSheet) {
                 BookingConfirmatinSheetView(
                     commonGround: commonGround,
                     isShowBookingConfirmationSheet:
                         $isShowBookingConfirmationSheet,
-                    isShowBookingIndetailsSheet: $isShowBookingIndetailsSheet,
                     isShowingServiceSheet: $isShowingServiceSheet,
-                    grandTotal: $grandTotal,
-                    selectedServices: $selectedServices,
-                    queuedAt: $queuedAt,
-                    finishTime: $finishTime,
-                    serviceTime: $serviceTime,
+                    isShowBookingIndetailsSheet: $isShowBookingIndetailsSheet,
+                    booking: $booking,
                     stylist: $stylist,
-                    createdBooking: $createdBooking
                 )
 
             }
@@ -124,17 +105,16 @@ struct StylistIndetailView: View {
         .sheet(isPresented: $isShowBookingIndetailsSheet) {
             BookingIndetailSheetView(
                 commonGround: commonGround,
-                thisBooking: $createdBooking,
-                isShowBookingIndetailsSheet:
-                    $isShowBookingIndetailsSheet,
-                thisStylist: $stylist,
-                isShowCancelSheet: $isShowCancelSheet
+                isShowBookingIndetailsSheet: $isShowBookingIndetailsSheet,
+                isShowCancelSheet: $isShowCancelSheet,
+                booking: $booking
             )
             .sheet(isPresented: $isShowCancelSheet) {
                 BookingCancellationSheetView(
                     isShowCancelSheet: $isShowCancelSheet
                 )
             }
+
         }
         .sheet(isPresented: $isShowingPortfolioSheet) {
             PortfolioSheetView(
@@ -144,18 +124,20 @@ struct StylistIndetailView: View {
         }
     }
 
-    private func getAppointment() {
+    private func getStylistIndetailData() {
         Task {
-            await getBooking()
+            isLoading = true
+            await getStylist(stylistId: stylistId)
+            isLoading = false
         }
     }
 
-    //to get appointment details
-    private func getBooking() async {
+    //to get stylist details
+    private func getStylist(stylistId: String) async {
         do {
-            createdBooking =
+            stylist =
                 try await stylistViewModel
-                .getAppointment(stylist: stylist)
+                .getStylist(stylistId: stylistId)
         } catch NetworkError.notAuthorized {
             commonGround.logout()
             commonGround.routes
@@ -170,6 +152,26 @@ struct StylistIndetailView: View {
         }
     }
 
+    //    //to get appointment details
+    //    private func getBooking() async {
+    //        do {
+    //            createdBooking =
+    //                try await stylistViewModel
+    //                .getAppointment(stylist: stylist)
+    //        } catch NetworkError.notAuthorized {
+    //            commonGround.logout()
+    //            commonGround.routes
+    //                .append(
+    //                    Route.mainLogin
+    //                )
+    //        } catch {
+    //            showAlert(
+    //                message:
+    //                    "Sorry!, Something went wrong. Please try again later."
+    //            )
+    //        }
+    //    }
+
     //to show the alert
     private func showAlert(message: String) {
         alertMessage = message
@@ -180,41 +182,13 @@ struct StylistIndetailView: View {
 #Preview {
     StylistIndetailView(
         commonGround: CommonGround.shared,
+        stylistId: "",
         stylist: .init(
-            _id: "fds",
-            stylistId: 432,
-            firstName: "jfadls",
-            lastName: "kjladfs",
-            thumbnailUrl: "fjdalks",
-            imageUrl: "fkjadls",
-            saloonName: "jfdslake",
-            location: .init(coordinates: [3, 3]),
-            rating: 432.423,
-            totalRating: 23,
-            isOpen: true,
-            start: "42",
-            end: "ffds",
-            totalQueued: 22,
-            finishedAt: "2025-04-02T6:30:00.000Z",
-            services: [
-                .init(id: 1, name: "Crew Cut", price: 1200.00, minutes: 25),
-                .init(id: 2, name: "Buzz Cut", price: 1300.00, minutes: 30),
-                .init(
-                    id: 3,
-                    name: "Beard Trim & Shaping",
-                    price: 900.00,
-                    minutes: 15
-                ),
-            ],
-            portfolio: [
-                .init(
-                    id: 1,
-                    message: "Buzz Cut",
-                    imageUrl:
-                        "https://images.unsplash.com/photo-1647140655214-e4a2d914971f?q=80&w=3165&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    likes: [323, 32, 31, 42]
-                )
-            ]
+            stylistId: "",
+            firstName: "",
+            lastName: "",
+            profileUrl: "",
+            thumbnailUrl: ""
         )
     )
 }
