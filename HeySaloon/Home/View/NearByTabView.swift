@@ -25,15 +25,16 @@ struct NearByTabView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     if nearByStylists.count == 1 {
-                        ForEach(nearByStylists, id: \._id) {
+                        ForEach(nearByStylists, id: \.stylistId) {
                             stylist in
                             FavoritesCardView(stylist: stylist)
                         }
                     } else {
-                        ForEach(nearByStylists, id: \._id) {
+                        ForEach(nearByStylists, id: \.stylistId) {
                             stylist in
                             NearByStylistCardView(
-                                stylist: stylist)
+                                stylist: stylist
+                            )
                         }
                     }
                 }

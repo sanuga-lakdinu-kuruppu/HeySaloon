@@ -2,8 +2,8 @@ import SwiftUI
 
 class LoginViewModel {
     static let shared = LoginViewModel()
-    let loginRequestEndpoint = "\(CommonGround.shared.baseUrl)/auth/request"
-    let otpVerifyEndpoint = "\(CommonGround.shared.baseUrl)/auth/verify"
+    let loginRequestEndpoint = "\(CommonGround.shared.baseUrl)/auth/login"
+    let otpVerifyEndpoint = "\(CommonGround.shared.baseUrl)/otp-verifications"
 
     private init() {}
 
@@ -12,12 +12,12 @@ class LoginViewModel {
         //request object creation
         let emailLoginRequest = EmailLoginRequest(
             email: emailAddress,
-            type: "EMAIL_LOGIN"
+            loginType: "EMAIL_LOGIN"
         )
 
         //network call
-        let (data, response) = try await NetworkSupporter.shared.call(
-            request: emailLoginRequest,
+        let (_, response) = try await NetworkSupporter.shared.call(
+            requestBody: emailLoginRequest,
             endpoint: loginRequestEndpoint,
             method: "POST",
             isSecured: false
@@ -25,18 +25,11 @@ class LoginViewModel {
 
         //response handling
         if response.statusCode == 200 {
-            let emailLoginResponse = try JSONDecoder().decode(
-                EmailLoginResponse.self,
-                from: data
-            )
-            if emailLoginResponse.status == "0000" {
-                DispatchQueue.main.async {
-                    CommonGround.shared.email = emailAddress
-                }
-            } else {
-                throw LoginError.otpSendingError
+            DispatchQueue.main.async {
+                CommonGround.shared.email = emailAddress
             }
-
+        } else if response.statusCode == 429 {
+            throw LoginError.requestExceeded
         } else {
             throw NetworkError.processError
         }
@@ -46,16 +39,17 @@ class LoginViewModel {
 
         //request object creation
         let emailOtpVerifyRequest = EmailOtpVerifyRequest(
+            loginType: "EMAIL_LOGIN",
+            verificationType: "REGULAR_AUTH",
             email: CommonGround.shared.email,
-            type: "EMAIL_LOGIN",
             otp: otp
         )
 
         //network call
         let (data, response) = try await NetworkSupporter.shared.call(
-            request: emailOtpVerifyRequest,
+            requestBody: emailOtpVerifyRequest,
             endpoint: otpVerifyEndpoint,
-            method: "POST",
+            method: "PATCH",
             isSecured: false
         )
 
@@ -65,44 +59,56 @@ class LoginViewModel {
                 EmailOtpVerifyResponse.self,
                 from: data
             )
+            DispatchQueue.main.async {
+                CommonGround.shared.isLoggedIn = true
+                CommonGround.shared.accessToken =
+                    emailOtpVerifyResponse.data.accessToken
+                CommonGround.shared.refreshToken =
+                    emailOtpVerifyResponse.data.refreshToken
+                if let payload = SupportManager.shared.decodeJwt(
+                    jwtToken: emailOtpVerifyResponse.data.accessToken
+                ) {
+                    if let clientId = payload["clientId"] as? String {
+                        CommonGround.shared.clientId = clientId
+                    }
 
-            if emailOtpVerifyResponse.status == "0000" {
-                DispatchQueue.main.async {
-                    CommonGround.shared.accessToken =
-                        emailOtpVerifyResponse.data!.accessToken!
-                    CommonGround.shared.refreshToken =
-                        emailOtpVerifyResponse.data!.refreshToken!
-                    CommonGround.shared.idToken =
-                        emailOtpVerifyResponse.data!.idToken!
-                    CommonGround.shared.role =
-                        emailOtpVerifyResponse.data!.role!
-                    CommonGround.shared.isLoggedIn = true
+                    if let stylistId = payload["stylistId"] as? String {
+                        CommonGround.shared.clientId = stylistId
+                    }
 
-                    CommonGround.shared.userProfile = UserProfileModel(
-                        firstName: emailOtpVerifyResponse.data!.firstName!,
-                        lastName: emailOtpVerifyResponse.data!.lastName!,
-                        imageUrl: emailOtpVerifyResponse.data!.imageUrl!
-                    )
-                    CommonGround.shared.saveUserDefaults()
+                    if let role = payload["role"] as? String {
+                        CommonGround.shared.role =
+                            role == Role.stylist.rawValue
+                            ? Role.stylist : Role.client
+                    }
 
-                    NotificationManager.shared
-                        .sendInstantNotifcation(
-                            title: "Hey Saloon",
-                            body:
-                                "Welcome back, let's get you started. Have a greate experience with Hey Saloon. Enjoy the style!"
+                    if let firstName = payload["firstName"] as? String,
+                        let lastName = payload["lastName"] as? String,
+                        let imageUrl = payload["imageUrl"] as? String
+                    {
+                        CommonGround.shared.userProfile = UserProfileModel(
+                            firstName: firstName,
+                            lastName: lastName,
+                            imageUrl: imageUrl
                         )
+                    }
 
                 }
-            } else if emailOtpVerifyResponse.status == "1112" {
-                throw LoginError.otpExpired
-            } else if emailOtpVerifyResponse.status == "1113" {
-                throw LoginError.otpAlreadyVerified
-            } else if emailOtpVerifyResponse.status == "1114" {
-                throw LoginError.otpInvalid
-            } else {
-                throw NetworkError.processError
+                CommonGround.shared.saveUserDefaults()
+                NotificationManager.shared
+                    .sendInstantNotifcation(
+                        title: "Hey Saloon",
+                        body:
+                            "Welcome back \(CommonGround.shared.userProfile?.firstName ?? "User"), let's get you started. Have a greate experience with Hey Saloon. Enjoy the style!"
+                    )
             }
 
+        } else if response.statusCode == 401 {
+            throw LoginError.otpInvalid
+        } else if response.statusCode == 409 {
+            throw LoginError.otpAlreadyVerified
+        } else if response.statusCode == 410 {
+            throw LoginError.otpExpired
         } else {
             throw NetworkError.processError
         }

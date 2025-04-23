@@ -4,13 +4,8 @@ struct ServiceDetailSheetView: View {
 
     @Binding var isShowingServiceSheet: Bool
     @Binding var isShowBookingConfirmationSheet: Bool
-    @Binding var grandTotal: Double
-    @Binding var stylist: StylistModel
-    @Binding var selectedServices: [ServiceModel]
-    @Binding var queuedAt: Int
-    @Binding var finishTime: String
-    @Binding var serviceTime: Int
-    @Binding var createdBooking: BookingModel?
+    @Binding var stylist: StylistModel?
+    @Binding var booking: BookingModel?
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
     let stylistViewModel: StylistViewModel = StylistViewModel.shared
 
@@ -26,15 +21,19 @@ struct ServiceDetailSheetView: View {
 
                 //information
                 VStack(spacing: screenwidth * 0.04) {
-                    if !stylist.services.isEmpty {
+                    if let services = stylist?.services, !services.isEmpty {
                         //services list
                         ScrollView(.vertical, showsIndicators: false) {
                             VStack(spacing: 0) {
-                                ForEach($stylist.services) { $service in
+                                let servicesBinding = Binding<[ServiceModel]>(
+                                    get: { stylist?.services ?? [] },
+                                    set: { stylist?.services = $0 }
+                                )
+
+                                ForEach(services.indices, id: \.self) { index in
                                     ServiceDetailItemView(
-                                        selectedServices: $selectedServices,
-                                        thisService: $service,
-                                        grandTotal: $grandTotal
+                                        thisService: servicesBinding[index],
+                                        booking: $booking
                                     )
                                 }
                             }
@@ -43,12 +42,12 @@ struct ServiceDetailSheetView: View {
                             .frame(maxWidth: .infinity)
                             .background(Color("SecondaryBackgroundColor"))
                             .cornerRadius(
-                                $stylist.services.count == 1
+                                services.count == 1
                                     ? screenwidth * 0.05 : screenwidth * 0.08
                             )
                             .overlay(
                                 RoundedRectangle(
-                                    cornerRadius: $stylist.services.count == 1
+                                    cornerRadius: services.count == 1
                                         ? screenwidth * 0.05
                                         : screenwidth * 0.08
                                 )
@@ -60,25 +59,24 @@ struct ServiceDetailSheetView: View {
                         }
 
                         //join queue button
-                        if createdBooking == nil {
-                            Button {
-                                clickJoinQueue()
-                            } label: {
-                                MainButtonView(
-                                    text: "Join the Queue (LKR \(grandTotal))",
-                                    foregroundColor: Color(
-                                        "MainBackgroundColor"
-                                    ),
-                                    backgroundColor: .accent,
-                                    isBoarder: false
-                                )
-                            }
+
+                        Button {
+                            clickJoinQueue()
+                        } label: {
+                            MainButtonView(
+                                text:
+                                    "Join the Queue (LKR \(booking?.serviceTotal ?? 0.0))",
+                                foregroundColor: Color(
+                                    "MainBackgroundColor"
+                                ),
+                                backgroundColor: .accent,
+                                isBoarder: false
+                            )
                         }
 
                     } else {
                         CaptionTextView(
-                            text:
-                                "No services found"
+                            text: "No services found"
                         )
                     }
                 }
@@ -96,16 +94,14 @@ struct ServiceDetailSheetView: View {
         .interactiveDismissDisabled(true)
     }
 
-    private func clickJoinQueue() {
-        queuedAt =
-            stylistViewModel
-            .calculateNextPosition(stylist: stylist)
-        serviceTime =
-            stylistViewModel
-            .calculateServiceTime(
-                selectedServices: selectedServices
-            )
-        finishTime = stylist.finishedAt
+    func clickJoinQueue() {
+        booking?.queuedAt = stylistViewModel.calculateNextPosition(
+            stylist: stylist
+        )
+        booking?.bookingTime = SupportManager.shared.getCurrentISOTimeString()
+        booking?.estimatedStarting =
+            stylist?.queueWillEnd
+            ?? SupportManager.shared.getCurrentISOTimeString()
         isShowBookingConfirmationSheet.toggle()
     }
 }

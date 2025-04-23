@@ -65,7 +65,8 @@ struct LoginOtpVerificationView: View {
                 }
                 .disabled(
                     otp.joined().isEmpty || otp.joined().count != 4
-                        || isLoading)
+                        || isLoading
+                )
 
             }
             .padding(.horizontal, screenwidth * 0.05)
@@ -104,7 +105,8 @@ struct LoginOtpVerificationView: View {
 
                 showAlert(
                     message:
-                        "Sorry!, Something went wrong. Please try again later.")
+                        "Sorry!, Something went wrong. Please try again later."
+                )
             }
             isLoading = false
         }
@@ -129,15 +131,18 @@ struct LoginOtpVerificationView: View {
             } catch LoginError.otpAlreadyVerified {
                 showAlert(
                     message:
-                        "Sorry!, OTP is already verified. Please try again.")
+                        "Sorry!, OTP is already verified. Please try again."
+                )
             } catch LoginError.otpInvalid {
                 showAlert(
                     message:
-                        "Sorry!, Enterd OTP is invalid. Please try again.")
+                        "Sorry!, Enterd OTP is invalid. Please try again."
+                )
             } catch {
                 showAlert(
                     message:
-                        "Sorry!, Something went wrong. Please try again later.")
+                        "Sorry!, Something went wrong. Please try again later."
+                )
             }
             isLoading = false
         }

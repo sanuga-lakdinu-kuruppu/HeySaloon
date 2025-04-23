@@ -12,7 +12,7 @@ struct SpecialSearchBarView: View {
                 .foregroundColor(.hint)
             CalloutTextView(text: hint, foregroundColor: .hint)
             Spacer()
-            Image(systemName: "microphone.fill")
+            Image(systemName: "microphone")
                 .foregroundColor(.hint)
         }
         .padding()
@@ -31,7 +31,8 @@ struct SpecialSearchBarView: View {
         .simultaneousGesture(
             TapGesture().onEnded {
                 isTapped = true
-            })
+            }
+        )
     }
 }
 

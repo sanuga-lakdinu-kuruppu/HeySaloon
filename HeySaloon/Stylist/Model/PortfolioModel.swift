@@ -1,8 +1,9 @@
 import SwiftUI
 
 struct PortfolioModel: Codable {
-    var id: Int
-    var message: String
-    var imageUrl: String
-    var likes: [Int]
+    var portfolioId: String
+    var name: String?
+    var imageUrl: String?
+    var likes: Int?
+    var isClientLiked: Bool?
 }
