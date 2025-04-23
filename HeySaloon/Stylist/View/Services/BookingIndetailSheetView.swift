@@ -31,9 +31,7 @@ struct BookingIndetailSheetView: View {
 
                                 //direction button
                                 Button {
-                                    isShowBookingIndetailsSheet.toggle()
-                                    commonGround.routes
-                                        .append(Route.direction)
+                                    clickDirectionButton()
                                 } label: {
                                     MainButtonView(
                                         text: "Get Me To This Saloon",
@@ -195,18 +193,22 @@ struct BookingIndetailSheetView: View {
                                         )
 
                                         //cancel button
-                                        Button {
-                                            isShowCancelSheet.toggle()
-                                        } label: {
-                                            MainButtonView(
-                                                text: "Cancel the Booking",
-                                                foregroundColor: Color.white,
-                                                backgroundColor: Color(
-                                                    "SecondaryBackgroundColor"
-                                                ),
-                                                isBoarder: true
-                                            )
+                                        if booking.status == "QUEUED" {
+                                            Button {
+                                                isShowCancelSheet.toggle()
+                                            } label: {
+                                                MainButtonView(
+                                                    text: "Cancel the Booking",
+                                                    foregroundColor: Color
+                                                        .white,
+                                                    backgroundColor: Color(
+                                                        "SecondaryBackgroundColor"
+                                                    ),
+                                                    isBoarder: true
+                                                )
+                                            }
                                         }
+
                                     } else {
                                         CaptionTextView(
                                             text:
@@ -232,6 +234,24 @@ struct BookingIndetailSheetView: View {
             .interactiveDismissDisabled(true)
 
         }
+    }
+
+    func clickDirectionButton() {
+        let tempStylist: StylistModel = .init(
+            stylistId: booking?.stylist?.stylistId
+                ?? "",
+            firstName: booking?.stylist?.firstName
+                ?? "",
+            lastName: booking?.stylist?.lastName
+                ?? "",
+            profileUrl: "",
+            thumbnailUrl: "",
+            location: booking?.stylist?.location
+        )
+        commonGround.selectedStylist = tempStylist
+        isShowBookingIndetailsSheet.toggle()
+        commonGround.routes
+            .append(Route.direction)
     }
 }
 
