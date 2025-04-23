@@ -3,7 +3,6 @@ import SwiftUI
 struct PortfolioCardView: View {
 
     var portfolio: PortfolioModel
-    @State var isLiked: Bool = false
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
     @State var screenHeight: CGFloat = UIScreen.main.bounds.height
 
@@ -12,7 +11,7 @@ struct PortfolioCardView: View {
 
             //first layer image
             AsyncImage(
-                url: URL(string: portfolio.imageUrl)
+                url: URL(string: portfolio.imageUrl ?? "")
             ) { Image in
                 Image
                     .resizable()
@@ -41,15 +40,14 @@ struct PortfolioCardView: View {
 
                 HStack {
                     CaptionTextView(
-                        text: "Likes (\(portfolio.likes.count))",
+                        text: "Likes (\(portfolio.likes ?? 0))",
                         fontWeight: .bold
                     )
                     Spacer()
                     Button {
-                        isLiked.toggle()
                     } label: {
                         CommonIconView(
-                            icon: isLiked
+                            icon: portfolio.isClientLiked ?? false
                                 ? "hand.thumbsup.fill" : "hand.thumbsup",
                             width: screenwidth * 0.04,
                             height: screenwidth * 0.04
@@ -61,7 +59,7 @@ struct PortfolioCardView: View {
 
                 HStack {
                     CaptionTextView(
-                        text: "\(portfolio.message)",
+                        text: "\(portfolio.name ?? "")",
                         fontWeight: .bold
                     )
                     Spacer()

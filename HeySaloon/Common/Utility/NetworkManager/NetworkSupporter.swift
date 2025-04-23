@@ -9,14 +9,17 @@ class NetworkSupporter {
     private init() {}
 
     func call<R: Encodable>(
-        request: R, endpoint: String, method: String, isSecured: Bool
+        requestBody: R,
+        endpoint: String,
+        method: String,
+        isSecured: Bool
     )
         async throws -> (Data, HTTPURLResponse)
     {
-        if method == "POST" {
+        if method == "POST" || method == "PATCH" {
 
             //encoding request
-            guard let requestEncoded = try? encoder.encode(request)
+            guard let requestEncoded = try? encoder.encode(requestBody)
             else {
                 throw NetworkError.processError
             }
@@ -27,11 +30,14 @@ class NetworkSupporter {
             }
             var request = URLRequest(url: url)
             request.setValue(
-                "application/json", forHTTPHeaderField: "Content-Type")
+                "application/json",
+                forHTTPHeaderField: "Content-Type"
+            )
             if isSecured {
                 request.setValue(
-                    CommonGround.shared.accessToken,
-                    forHTTPHeaderField: "authorization")
+                    "Bearer \(CommonGround.shared.accessToken)",
+                    forHTTPHeaderField: "Authorization"
+                )
             }
             request.httpMethod = method
 
@@ -56,15 +62,17 @@ class NetworkSupporter {
 
             var request = URLRequest(url: url)
             request.setValue(
-                "application/json", forHTTPHeaderField: "Content-Type")
+                "application/json",
+                forHTTPHeaderField: "Content-Type"
+            )
             if isSecured {
                 request.setValue(
-                    CommonGround.shared.accessToken,
-                    forHTTPHeaderField: "authorization")
+                    "Bearer \(CommonGround.shared.accessToken)",
+                    forHTTPHeaderField: "Authorization"
+                )
             }
             request.httpMethod = method
 
-            //request call
             let (data, response) = try await URLSession.shared.data(
                 for: request
             )
@@ -75,14 +83,22 @@ class NetworkSupporter {
             }
 
             return (data, response)
+
         } else {
             return (
                 Data(),
                 HTTPURLResponse(
-                    url: URL(string: "")!, statusCode: 200, httpVersion: nil,
-                    headerFields: nil)!
+                    url: URL(string: "")!,
+                    statusCode: 200,
+                    httpVersion: nil,
+                    headerFields: nil
+                )!
             )
         }
 
     }
+}
+
+struct RefreshTokenRequest: Codable {
+    var refreshToken: String
 }

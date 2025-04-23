@@ -16,10 +16,11 @@ struct TopRatedTabView: View {
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    ForEach(topRatedStylists, id: \._id) {
+                    ForEach(topRatedStylists, id: \.stylistId) {
                         stylist in
                         NearByStylistCardView(
-                            stylist: stylist)
+                            stylist: stylist
+                        )
                     }
                 }
             }

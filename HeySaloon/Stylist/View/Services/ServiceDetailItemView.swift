@@ -2,25 +2,28 @@ import SwiftUI
 
 struct ServiceDetailItemView: View {
 
-    @Binding var selectedServices: [ServiceModel]
     @Binding var thisService: ServiceModel
-    @Binding var grandTotal: Double
+    @Binding var booking: BookingModel?
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
-    @State var isThisSelected: Bool = false
+    var isSelected: Bool {
+        booking?.servicesSelected.contains(where: {
+            $0.serviceId == thisService.serviceId
+        }) ?? false
+    }
 
     var body: some View {
         VStack(spacing: screenwidth * 0.05) {
 
             HStack {
                 VStack(alignment: .leading) {
-                    CaptionTextView(text: thisService.name)
+                    CaptionTextView(text: thisService.serviceName)
                     HStack(spacing: screenwidth * 0.04) {
                         CaptionTextView(
-                            text: "LKR \(thisService.price)",
+                            text: "LKR \(thisService.serviceCost)",
                             fontWeight: .bold
                         )
                         CaptionTextView(
-                            text: "\(thisService.minutes) min.",
+                            text: "\(thisService.serviceWillTake) min.",
                             fontWeight: .bold
                         )
                     }
@@ -30,36 +33,55 @@ struct ServiceDetailItemView: View {
                 Spacer()
 
                 Button {
-                    if isThisSelected {
-                        isThisSelected = false
-                        selectedServices.removeAll { $0.id == thisService.id }
-                    } else {
-                        isThisSelected = true
-                        selectedServices.append(thisService)
-                    }
-
-                    grandTotal = selectedServices.reduce(0) { $0 + $1.price }
+                    toggleServiceSelection()
                 } label: {
                     Image(
-                        systemName: isThisSelected
+                        systemName: isSelected
                             ? "checkmark.circle.fill" : "plus"
                     )
                     .resizable()
                     .frame(
-                        width: screenwidth * 0.04, height: screenwidth * 0.04
+                        width: screenwidth * 0.04,
+                        height: screenwidth * 0.04
                     )
-                    .foregroundColor(isThisSelected ? .accent : .white)
+                    .foregroundColor(isSelected ? .accent : .white)
                 }
             }
 
             CommonDividerView()
         }
         .padding(.top, screenwidth * 0.05)
-        .onAppear {
-            isThisSelected = selectedServices.contains {
-                $0.id == thisService.id
+    }
+
+    private func toggleServiceSelection() {
+        var currentBooking =
+            booking
+            ?? BookingModel(
+                bookingId: "SAMPLE_BOOKING_ID",
+                bookingTime: "SAMPLE_BOOKING_TIME",
+                status: "CREATING",
+                servicesSelected: [],
+                queuedAt: 0,
+                serviceWillTake: 0,
+                estimatedStarting: "SAMPLE_BOOKING_ESTIMATED_STARTING",
+                serviceTotal: 0.0,
+                stylist: .init(stylistId: "fjldska")
+            )
+
+        if isSelected {
+            currentBooking.servicesSelected.removeAll {
+                $0.serviceId == thisService.serviceId
             }
+        } else {
+            currentBooking.servicesSelected.append(thisService)
         }
+
+        currentBooking.serviceTotal = currentBooking.servicesSelected.reduce(0)
+        { $0 + $1.serviceCost }
+        currentBooking.serviceWillTake = currentBooking.servicesSelected.reduce(
+            0
+        ) { $0 + $1.serviceWillTake }
+        booking = currentBooking
     }
 
 }

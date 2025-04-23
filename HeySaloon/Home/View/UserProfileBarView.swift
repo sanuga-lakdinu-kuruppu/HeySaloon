@@ -10,14 +10,15 @@ struct UserProfileBarView: View {
                 HStack {
                     LargeTitleTextView(
                         text:
-                            "Hello, \(userProfile?.firstName ?? "Guest")"
+                            "Hello, \(userProfile?.firstName.isEmpty == false ? userProfile!.firstName : "Guest")"
                     )
+
                     Spacer()
                 }
                 HStack {
                     CalloutTextView(
                         text:
-                            getDateString()
+                            SupportManager.shared.getDateString(date: Date())
                     )
                     Spacer()
                 }
@@ -28,16 +29,16 @@ struct UserProfileBarView: View {
                 url: userProfile?.imageUrl ?? ""
 
             )
+            .onTapGesture {
+                CommonGround.shared.logout()
+                CommonGround.shared.routes
+                    .append(
+                        Route.mainLogin
+                    )
+            }
         }
     }
 
-    //to convert current date into required format
-    private func getDateString() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, MMMM d, yyyy"
-        let currentDate = Date()
-        return formatter.string(from: currentDate)
-    }
 }
 
 #Preview {

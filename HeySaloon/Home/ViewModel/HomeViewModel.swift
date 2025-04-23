@@ -3,18 +3,18 @@ import SwiftUI
 class HomeViewModel {
     static let shared = HomeViewModel()
     let favoriteStylistsEndpoint =
-        "\(CommonGround.shared.baseUrl)/stylists/favorites"
+        "\(CommonGround.shared.baseUrl)/stylists?queryOn=favourites&clientId=\(CommonGround.shared.clientId)"
     let nearByStylistsEndpoint =
-        "\(CommonGround.shared.baseUrl)/stylists/nearBy"
+        "\(CommonGround.shared.baseUrl)/stylists?queryOn=nearBy&clientId=\(CommonGround.shared.clientId)"
     let topRatedStylistsEndpoint =
-        "\(CommonGround.shared.baseUrl)/stylists/topRated"
+        "\(CommonGround.shared.baseUrl)/stylists?queryOn=topRated"
 
     private init() {}
 
     func getFavoriteStylists() async throws -> [StylistModel] {
         //network call
         let (data, response) = try await NetworkSupporter.shared.call(
-            request: AnyCodable(),
+            requestBody: AnyCodable(),
             endpoint: favoriteStylistsEndpoint,
             method: "GET",
             isSecured: true
@@ -22,20 +22,16 @@ class HomeViewModel {
 
         //response handling
         if response.statusCode == 200 {
-
             let favoriteStylistsResponse = try JSONDecoder().decode(
                 FavoriteStylistsResponse.self,
                 from: data
             )
-
-            if favoriteStylistsResponse.status == "0000" {
-                return favoriteStylistsResponse.data
-            } else {
-                throw NetworkError.processError
-            }
-
+            return favoriteStylistsResponse.data
         } else if response.statusCode == 401 {
             throw NetworkError.notAuthorized
+        } else if response.statusCode == 498 {
+            try await SupportManager.shared.getNewRefreshToken()
+            return try await getFavoriteStylists()
         } else {
             throw NetworkError.processError
         }
@@ -46,27 +42,23 @@ class HomeViewModel {
     {
         //network call
         let (data, response) = try await NetworkSupporter.shared.call(
-            request: AnyCodable(),
+            requestBody: AnyCodable(),
             endpoint:
-                "\(nearByStylistsEndpoint)?lat=\(lat)&log=\(log)",
+                "\(nearByStylistsEndpoint)&lat=\(lat)&log=\(log)",
             method: "GET",
             isSecured: true
         )
 
         //response handling
         if response.statusCode == 200 {
-
             let nearByStylistsResponse = try JSONDecoder().decode(
                 NearByStylistsResponse.self,
                 from: data
             )
-
-            if nearByStylistsResponse.status == "0000" {
-                return nearByStylistsResponse.data
-            } else {
-                throw NetworkError.processError
-            }
-
+            return nearByStylistsResponse.data
+        } else if response.statusCode == 498 {
+            try await SupportManager.shared.getNewRefreshToken()
+            return try await getNearByStylists(lat: lat, log: log)
         } else if response.statusCode == 401 {
             throw NetworkError.notAuthorized
         } else {
@@ -77,7 +69,7 @@ class HomeViewModel {
     func getTopRatedStylists() async throws -> [StylistModel] {
         //network call
         let (data, response) = try await NetworkSupporter.shared.call(
-            request: AnyCodable(),
+            requestBody: AnyCodable(),
             endpoint: topRatedStylistsEndpoint,
             method: "GET",
             isSecured: true
@@ -85,18 +77,14 @@ class HomeViewModel {
 
         //response handling
         if response.statusCode == 200 {
-
             let topRatedStylistsResponse = try JSONDecoder().decode(
                 TopRatedStylistsResponse.self,
                 from: data
             )
-
-            if topRatedStylistsResponse.status == "0000" {
-                return topRatedStylistsResponse.data
-            } else {
-                throw NetworkError.processError
-            }
-
+            return topRatedStylistsResponse.data
+        } else if response.statusCode == 498 {
+            try await SupportManager.shared.getNewRefreshToken()
+            return try await getTopRatedStylists()
         } else if response.statusCode == 401 {
             throw NetworkError.notAuthorized
         } else {

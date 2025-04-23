@@ -32,7 +32,8 @@ struct EmailLoginView: View {
                     }
 
                     MainTextFieldView(
-                        input: $email, hint: "Enter your email address"
+                        input: $email,
+                        hint: "Enter your email address"
                     )
                     .onChange(of: email) { _ in
                         validateEmail()
@@ -90,10 +91,16 @@ struct EmailLoginView: View {
                     .append(
                         Route.loginOtpVerification
                     )
+            } catch LoginError.requestExceeded {
+                showAlert(
+                    message:
+                        "Too many login requests. Please try again later."
+                )
             } catch {
                 showAlert(
                     message:
-                        "Sorry!, Something went wrong. Please try again later.")
+                        "Sorry!, Something went wrong. Please try again later."
+                )
             }
             isLoading = false
         }
@@ -110,7 +117,10 @@ struct EmailLoginView: View {
         if email.isEmpty {
             errorMessage = "Email should be filled to continue."
         } else if email.range(
-            of: emailRegex, options: .regularExpression, range: nil, locale: nil
+            of: emailRegex,
+            options: .regularExpression,
+            range: nil,
+            locale: nil
         ) == nil {
             errorMessage =
                 "Email should be a correct email address (ex: sample@gmail.com)."

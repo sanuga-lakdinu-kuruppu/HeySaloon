@@ -117,11 +117,13 @@ struct HomeView: View {
                                 !searchedStylists.isEmpty
                             {
                                 ScrollView(.vertical, showsIndicators: false) {
-                                    ForEach(searchedStylists, id: \._id) {
+                                    ForEach(searchedStylists, id: \.stylistId) {
                                         stylist in
                                         SearchResultCardView(stylist: stylist)
                                             .onTapGesture {
                                                 isShowingSearchSheet = false
+                                                commonGround.selectedStylistId =
+                                                    stylist.stylistId
                                                 commonGround.selectedStylist =
                                                     stylist
                                                 commonGround.routes
@@ -287,8 +289,8 @@ struct HomeView: View {
             nearByStylists =
                 try await homeViewModel
                 .getNearByStylists(
-                    lat: 7.16870166326981,
-                    log: 79.88376611833456
+                    lat: 36.778259,
+                    log: -119.417932
                 )
         } catch NetworkError.notAuthorized {
             commonGround.logout()

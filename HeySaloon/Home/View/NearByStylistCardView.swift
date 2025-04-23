@@ -8,38 +8,34 @@ struct NearByStylistCardView: View {
     @State var isFavoriteSelected: Bool = false
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: screenwidth * 0.02) {
 
             //image
             ZStack {
                 AsyncImage(
                     url: URL(
-                        string:
-                            stylist.thumbnailUrl
+                        string: stylist.thumbnailUrl
                     )
-                ) { Image in
-
-                    Image
+                ) { image in
+                    image
                         .resizable()
                         .scaledToFill()
                         .frame(
-                            maxWidth: verticalCardWidth - 16,
-                            maxHeight: verticalCardWidth * 0.8
+                            width: verticalCardWidth,
+                            height: verticalCardWidth * 0.7
                         )
                         .clipShape(
-                            RoundedRectangle(cornerRadius: 24)
+                            RoundedRectangle(cornerRadius: screenwidth * 0.06)
                         )
                         .clipped()
-
                 } placeholder: {
-                    RoundedRectangle(cornerRadius: 24)
+                    RoundedRectangle(cornerRadius: screenwidth * 0.06)
                         .foregroundColor(.hint)
                         .frame(
-                            maxWidth: verticalCardWidth - 16,
-                            maxHeight: verticalCardWidth * 0.8
+                            width: verticalCardWidth,
+                            height: verticalCardWidth * 0.7
                         )
                 }
-
                 VStack {
                     HStack {
                         Spacer()
@@ -47,7 +43,9 @@ struct NearByStylistCardView: View {
                             systemName: isFavoriteSelected
                                 ? "heart.fill" : "heart"
                         )
-                        .foregroundColor(isFavoriteSelected ? .error : .white)
+                        .foregroundColor(
+                            isFavoriteSelected ? .error : .white
+                        )
                         .onTapGesture {
                             isFavoriteSelected.toggle()
                         }
@@ -57,28 +55,30 @@ struct NearByStylistCardView: View {
                         Image(systemName: "star.fill")
                             .foregroundColor(Color("AccentColor"))
                         CaptionTextView(
-                            text: "\(stylist.rating)(\(stylist.totalRating))",
+                            text:
+                                "\(stylist.currentRating ?? 0.0)(\(stylist.totalReviewed ?? 0))",
                             foregroundColor: .white
                         )
                     }
                 }
-                .padding(.horizontal, 24)
-                .padding(.top, 24)
-                .padding(.bottom, 8)
+                .padding(.top, screenwidth * 0.04)
+                .padding(.horizontal, screenwidth * 0.04)
+                .padding(.bottom, screenwidth * 0.02)
             }
 
             //information
-            VStack(spacing: 8) {
+            VStack(spacing: screenwidth * 0.02) {
                 CaptionTextView(
-                    text: stylist.isOpen ? "Open Now" : "Closed",
-                    foregroundColor: stylist.isOpen
+                    text: stylist.isOpen ?? false ? "Open Now" : "Closed",
+                    foregroundColor: stylist.isOpen ?? false
                         ? Color(
                             "AccentColor"
                         ) : .error
                 )
 
                 CaptionTextView(
-                    text: "(\(stylist.start) - \(stylist.end))",
+                    text:
+                        "(\(stylist.startTime ?? "") - \(stylist.endTime ?? ""))",
                     foregroundColor: .hint
                 )
 
@@ -88,7 +88,7 @@ struct NearByStylistCardView: View {
                     foregroundColor: .white
                 )
                 CaptionTextView(
-                    text: "From \(stylist.saloonName)",
+                    text: "From \(stylist.saloonName ?? "")",
                     foregroundColor: .white
                 )
 
@@ -97,7 +97,7 @@ struct NearByStylistCardView: View {
                         .foregroundColor(.hint)
                     CaptionTextView(
                         text:
-                            "\(stylist.totalQueued) Until (\(SupportManager.shared.getFinishTime(finishTime: stylist.finishedAt)))",
+                            "\(stylist.totalQueued ?? 0) Until (\(SupportManager.shared.getFinishTime(finishTime: stylist.queueWillEnd ?? "")))",
                         foregroundColor: .hint
                     )
                 }
@@ -108,9 +108,8 @@ struct NearByStylistCardView: View {
                 } label: {
                     BookNowButtonView()
                 }
-                .padding(.top, 8)
+                .padding(.top, screenwidth * 0.02)
             }
-            .padding(.horizontal, 8)
 
             Spacer()
         }
@@ -118,11 +117,10 @@ struct NearByStylistCardView: View {
             width: verticalCardWidth,
             height: screenwidth * 0.8
         )
-        .padding(.top, 8)
         .background(.secondaryBackground)
-        .cornerRadius(32)
+        .cornerRadius(screenwidth * 0.08)
         .overlay(
-            RoundedRectangle(cornerRadius: 32)
+            RoundedRectangle(cornerRadius: screenwidth * 0.08)
                 .stroke(
                     Color("BorderLineColor"),
                     lineWidth: 2
@@ -134,40 +132,11 @@ struct NearByStylistCardView: View {
 #Preview {
     NearByStylistCardView(
         stylist: .init(
-            _id: "fds",
-            stylistId: 432,
-            firstName: "jfadls",
-            lastName: "kjladfs",
-            thumbnailUrl: "fjdalks",
-            imageUrl: "fkjadls",
-            saloonName: "jfdslake",
-            location: .init(coordinates: [3, 3]),
-            rating: 432.423,
-            totalRating: 23,
-            isOpen: true,
-            start: "42",
-            end: "ffds",
-            totalQueued: 22,
-            finishedAt: "2024-03-28T16:30:00.000Z",
-            services: [
-                .init(id: 1, name: "Crew Cut", price: 1200.00, minutes: 25),
-                .init(id: 2, name: "Buzz Cut", price: 1300.00, minutes: 30),
-                .init(
-                    id: 3,
-                    name: "Beard Trim & Shaping",
-                    price: 900.00,
-                    minutes: 15
-                ),
-            ],
-            portfolio: [
-                .init(
-                    id: 1,
-                    message: "Buzz Cut",
-                    imageUrl: "",
-                    likes: [323, 32, 31, 42]
-                )
-            ]
-
+            stylistId: "",
+            firstName: "",
+            lastName: "",
+            profileUrl: "",
+            thumbnailUrl: ""
         )
     )
 }
