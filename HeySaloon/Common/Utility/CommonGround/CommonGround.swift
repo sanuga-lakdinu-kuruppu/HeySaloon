@@ -9,9 +9,11 @@ class CommonGround: ObservableObject {
     @Published var commingFrom: Route = Route.mainApp
     @Published var accessToken: String = ""
     @Published var refreshToken: String = ""
-    @Published var idToken: String = ""
     @Published var role: Role? = nil
+    @Published var clientId: String = ""
+    @Published var stylistId: String = ""
     @Published var isLoggedIn: Bool = false
+    @Published var selectedStylistId: String = ""
     @Published var selectedStylist: StylistModel? = nil
     @Published var userProfile: UserProfileModel? = nil
 
@@ -20,6 +22,14 @@ class CommonGround: ObservableObject {
     func getUserDefaults() {
         isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
         accessToken = UserDefaults.standard.string(forKey: "accessToken") ?? ""
+        refreshToken =
+            UserDefaults.standard.string(forKey: "refreshToken") ?? ""
+        role =
+            UserDefaults.standard.string(
+                forKey: "role"
+            ) == Role.stylist.rawValue ? Role.stylist : Role.client
+        clientId = UserDefaults.standard.string(forKey: "clientId") ?? ""
+        stylistId = UserDefaults.standard.string(forKey: "stylistId") ?? ""
         let firstname = UserDefaults.standard.string(forKey: "firstname") ?? ""
         let lastname = UserDefaults.standard.string(forKey: "lastname") ?? ""
         let imageUrl = UserDefaults.standard.string(forKey: "imageUrl") ?? ""
@@ -33,6 +43,10 @@ class CommonGround: ObservableObject {
     func saveUserDefaults() {
         UserDefaults.standard.set(isLoggedIn, forKey: "isLoggedIn")
         UserDefaults.standard.set(accessToken, forKey: "accessToken")
+        UserDefaults.standard.set(refreshToken, forKey: "refreshToken")
+        UserDefaults.standard.set(role?.rawValue, forKey: "role")
+        UserDefaults.standard.set(clientId, forKey: "clientId")
+        UserDefaults.standard.set(stylistId, forKey: "stylistId")
         UserDefaults.standard.set(userProfile?.firstName, forKey: "firstname")
         UserDefaults.standard.set(userProfile?.lastName, forKey: "lastname")
         UserDefaults.standard.set(userProfile?.imageUrl, forKey: "imageUrl")
@@ -41,6 +55,10 @@ class CommonGround: ObservableObject {
     func removeUserDefaults() {
         UserDefaults.standard.removeObject(forKey: "isLoggedIn")
         UserDefaults.standard.removeObject(forKey: "accessToken")
+        UserDefaults.standard.removeObject(forKey: "refreshToken")
+        UserDefaults.standard.removeObject(forKey: "role")
+        UserDefaults.standard.removeObject(forKey: "clientId")
+        UserDefaults.standard.removeObject(forKey: "stylistId")
         UserDefaults.standard.removeObject(forKey: "firstname")
         UserDefaults.standard.removeObject(forKey: "lastname")
         UserDefaults.standard.removeObject(forKey: "imageUrl")
@@ -53,8 +71,9 @@ class CommonGround: ObservableObject {
         self.email = ""
         self.routes = []
         self.accessToken = ""
-        self.idToken = ""
         self.refreshToken = ""
+        self.clientId = ""
+        self.stylistId = ""
         self.userProfile = nil
         self.removeUserDefaults()
     }

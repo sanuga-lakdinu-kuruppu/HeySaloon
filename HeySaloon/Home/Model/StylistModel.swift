@@ -1,27 +1,34 @@
 import SwiftUI
 
-struct StylistModel: Identifiable, Codable {
-    var _id: String
-    var stylistId: Int
+struct StylistModel: Codable {
+    var stylistId: String
+    var createdAt: String?
     var firstName: String
     var lastName: String
+    var profileUrl: String
     var thumbnailUrl: String
-    var imageUrl: String
-    var saloonName: String
-    var location: Location
-    var rating: Double
-    var totalRating: Int
-    var isOpen: Bool
-    var start: String
-    var end: String
-    var totalQueued: Int
-    var finishedAt: String
-    var services: [ServiceModel]
-    var portfolio: [PortfolioModel]
-
-    var id: String { _id }
+    var saloonName: String?
+    var isOpen: Bool?
+    var distance: Double?
+    var isClientLiked: Bool?
+    var startTime: String?
+    var endTime: String?
+    var location: Location?
+    var address: Address?
+    var services: [ServiceModel]?
+    var totalQueued: Int?
+    var queueWillEnd: String?
+    var totalReviewed: Int?
+    var currentRating: Double?
 }
 
-struct Location: Codable {
-    var coordinates: [Double]
+struct Address: Codable {
+    var no: String?
+    var address1: String?
+    var address2: String?
+    var address3: String?
+}
+
+struct Location: Codable, Equatable {
+    var coordinates: [Double]?
 }

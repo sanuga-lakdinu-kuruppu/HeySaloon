@@ -3,10 +3,9 @@ import SwiftUI
 struct BookingIndetailSheetView: View {
 
     @ObservedObject var commonGround: CommonGround
-    @Binding var thisBooking: BookingModel?
     @Binding var isShowBookingIndetailsSheet: Bool
-    @Binding var thisStylist: StylistModel
     @Binding var isShowCancelSheet: Bool
+    @Binding var booking: BookingModel?
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
     @State var screenHeight: CGFloat = UIScreen.main.bounds.height
 
@@ -17,21 +16,18 @@ struct BookingIndetailSheetView: View {
 
                     CommonSheetTitleView(
                         title:
-                            "\(commonGround.userProfile?.firstName ?? "User")'s Appointments",
+                            "\(commonGround.userProfile?.firstName ?? "User")'s Bookings",
                         isClosed: $isShowBookingIndetailsSheet
                     )
 
-                    ScrollView(
-                        .vertical,
-                        showsIndicators: false
-                    ) {
+                    ScrollView(.vertical, showsIndicators: false) {
                         VStack(spacing: screenwidth * 0.08) {
 
                             //top part
                             VStack(spacing: screenwidth * 0.04) {
 
                                 //top stylists card view
-                                StylistProfileCardView(thisStylist: thisStylist)
+                                StylistProfileCardView(booking: booking)
 
                                 //direction button
                                 Button {
@@ -51,15 +47,15 @@ struct BookingIndetailSheetView: View {
                             }
 
                             //bottom cards
-                            if let thisBooking = thisBooking {
+                            if let booking = booking {
                                 VStack(spacing: screenwidth * 0.04) {
-                                    if !thisBooking.selectedServices.isEmpty {
+                                    if !booking.servicesSelected.isEmpty {
 
                                         //booking time
                                         VStack(spacing: 0) {
                                             CommonListItemView(
                                                 title: "Booking Time",
-                                                value: thisBooking.bookingTime
+                                                value: booking.bookingTime
                                             )
                                         }
                                         .padding(
@@ -86,17 +82,17 @@ struct BookingIndetailSheetView: View {
                                             CommonListItemView(
                                                 title: "Queued at",
                                                 value:
-                                                    "\(thisBooking.queuedAt) st"
+                                                    "\(booking.queuedAt) st"
                                             )
                                             CommonListItemView(
                                                 title: "Need to wait",
                                                 value:
-                                                    "\(SupportManager.shared.getTimeDifference(finishTime: thisBooking.serviceAt)) min (until \(SupportManager.shared.getFinishTime(finishTime: thisBooking.serviceAt)))"
+                                                    "\(SupportManager.shared.getTimeDifference(finishTime: booking.estimatedStarting)) min (until \(SupportManager.shared.getFinishTime(finishTime: booking.estimatedStarting)))"
                                             )
                                             CommonListItemView(
                                                 title: "Service will take",
                                                 value:
-                                                    "Aprox. \(thisBooking.serviceTime) min"
+                                                    "Aprox. \(booking.serviceWillTake) min"
                                             )
                                         }
                                         .padding(
@@ -125,15 +121,16 @@ struct BookingIndetailSheetView: View {
                                         ) {
                                             VStack(spacing: 0) {
                                                 ForEach(
-                                                    thisBooking.selectedServices
+                                                    booking.servicesSelected,
+                                                    id: \.serviceId
                                                 ) {
                                                     selectedService in
 
                                                     CommonListItemView(
                                                         title: selectedService
-                                                            .name,
+                                                            .serviceName,
                                                         value:
-                                                            "LKR \(selectedService.price)"
+                                                            "LKR \(selectedService.serviceCost)"
                                                     )
 
                                                 }
@@ -149,7 +146,7 @@ struct BookingIndetailSheetView: View {
                                                 )
                                             )
                                             .cornerRadius(
-                                                thisBooking.selectedServices
+                                                booking.servicesSelected
                                                     .count
                                                     == 1
                                                     ? screenwidth * 0.05
@@ -157,8 +154,8 @@ struct BookingIndetailSheetView: View {
                                             )
                                             .overlay(
                                                 RoundedRectangle(
-                                                    cornerRadius: thisBooking
-                                                        .selectedServices.count
+                                                    cornerRadius: booking
+                                                        .servicesSelected.count
                                                         == 1
                                                         ? screenwidth * 0.05
                                                         : screenwidth * 0.08
@@ -175,7 +172,7 @@ struct BookingIndetailSheetView: View {
                                             CommonListItemView(
                                                 title: "Grand Total",
                                                 value:
-                                                    "LKR \(thisBooking.serviceTotal)"
+                                                    "LKR \(booking.serviceTotal)"
                                             )
                                         }
                                         .padding(
@@ -233,77 +230,11 @@ struct BookingIndetailSheetView: View {
             .presentationBackground(Color("MainBackgroundColor"))
             .presentationDragIndicator(.hidden)
             .interactiveDismissDisabled(true)
+
         }
     }
 }
 
 #Preview {
-    BookingIndetailPreview()
-}
-
-struct BookingIndetailPreview: View {
-
-    @State var thisBooking: BookingModel? = .init(
-        bookingId: 43,
-        userId: 43,
-        stylistId: 43,
-        bookingTime: "423",
-        queuedAt: 3,
-        serviceAt: "34423",
-        serviceTime: 31,
-        bookingStatus: "",
-        selectedServices: [],
-        serviceTotal: 332
-    )
-    @State var isShowBookingIndetailsSheet: Bool = false
-    @State var isShowBookingConfirmationSheet: Bool = false
-    @State var isShowingServiceSheet: Bool = false
-    @State var temp = false
-    @State var thisStylists: StylistModel = .init(
-        _id: "fds",
-        stylistId: 432,
-        firstName: "jfadls",
-        lastName: "kjladfs",
-        thumbnailUrl: "fjdalks",
-        imageUrl: "fkjadls",
-        saloonName: "jfdslake",
-        location: .init(coordinates: [3, 3]),
-        rating: 432.423,
-        totalRating: 23,
-        isOpen: true,
-        start: "42",
-        end: "ffds",
-        totalQueued: 22,
-        finishedAt: "2025-04-02T6:30:00.000Z",
-        services: [
-            .init(id: 1, name: "Crew Cut", price: 1200.00, minutes: 25),
-            .init(id: 2, name: "Buzz Cut", price: 1300.00, minutes: 30),
-            .init(
-                id: 3,
-                name: "Beard Trim & Shaping",
-                price: 900.00,
-                minutes: 15
-            ),
-
-        ],
-        portfolio: [
-            .init(
-                id: 1,
-                message: "Buzz Cut",
-                imageUrl: "",
-                likes: [323, 32, 31, 42]
-            )
-        ]
-
-    )
-
-    var body: some View {
-        BookingIndetailSheetView(
-            commonGround: CommonGround.shared,
-            thisBooking: $thisBooking,
-            isShowBookingIndetailsSheet: $isShowBookingIndetailsSheet,
-            thisStylist: $thisStylists,
-            isShowCancelSheet: $temp
-        )
-    }
+    //    BookingIndetailPreview()
 }

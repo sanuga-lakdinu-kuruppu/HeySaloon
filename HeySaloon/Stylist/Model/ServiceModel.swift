@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct ServiceModel: Identifiable, Codable {
-    var id: Int
-    var name: String
-    var price: Double
-    var minutes: Int
+struct ServiceModel: Codable, Equatable {
+    var serviceId: String
+    var serviceName: String
+    var serviceCost: Double
+    var serviceWillTake: Int
 }

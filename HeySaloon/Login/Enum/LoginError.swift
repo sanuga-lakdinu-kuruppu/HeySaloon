@@ -5,4 +5,5 @@ enum LoginError: Error {
     case otpExpired
     case otpAlreadyVerified
     case otpInvalid
+    case requestExceeded
 }

@@ -41,8 +41,8 @@ struct MapRouteView: UIViewRepresentable {
         context.coordinator.lastRouteDrawTime = now
 
         let from = CLLocationCoordinate2D(
-            latitude: 40.7580,
-            longitude: -73.9855
+            latitude: 36.74957485440294,
+            longitude: -119.44732082211506
         )
 
         guard from.latitude != 0.0 && from.longitude != 0.0 else {
@@ -50,13 +50,20 @@ struct MapRouteView: UIViewRepresentable {
             return
         }
 
-        drawRoute(
-            from: from,
-            to: CLLocationCoordinate2D(
-                latitude: selectecStylist.location.coordinates.first!,
-                longitude: selectecStylist.location.coordinates.last!
+        if let lat = selectecStylist.location?.coordinates?.last,
+            let lng = selectecStylist.location?.coordinates?.first
+        {
+            drawRoute(
+                from: from,
+                to: CLLocationCoordinate2D(
+                    latitude: lat,
+                    longitude: lng
+                )
             )
-        )
+        } else {
+            print("Coordinates are missing or invalid")
+        }
+
     }
 
     func drawRoute(from: CLLocationCoordinate2D, to: CLLocationCoordinate2D) {

@@ -2,5 +2,5 @@ import SwiftUI
 
 struct EmailLoginRequest: Codable {
     let email: String
-    let type: String
+    let loginType: String
 }

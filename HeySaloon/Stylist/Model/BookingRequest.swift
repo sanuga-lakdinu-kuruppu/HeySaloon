@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct BookingRequest: Codable {
-    let stylistId: Int
-    let selectedServices: [ServiceModel]
+    let stylistId: String
+    let clientId: String
+    let servicesSelected: [String]
 }

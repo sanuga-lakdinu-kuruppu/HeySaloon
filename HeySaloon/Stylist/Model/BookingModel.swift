@@ -1,14 +1,24 @@
 import SwiftUI
 
-struct BookingModel: Codable {
-    let bookingId: Int
-    let userId: Int
-    let stylistId: Int
-    let bookingTime: String
-    let queuedAt: Int
-    let serviceAt: String
-    let serviceTime: Int
-    let bookingStatus: String
-    let selectedServices: [ServiceModel]
-    let serviceTotal: Double
+struct BookingModel: Codable, Equatable {
+    var bookingId: String
+    var bookingTime: String
+    var status: String
+    var servicesSelected: [ServiceModel]
+    var queuedAt: Int
+    var serviceWillTake: Int
+    var estimatedStarting: String
+    var serviceTotal: Double
+    var stylist: StylistProfile?
+}
+
+struct StylistProfile: Codable, Equatable {
+    var stylistId: String
+    var firstName: String?
+    var lastName: String?
+    var profileUrl: String?
+    var location: Location?
+    var saloonName: String?
+    var totalReviewed: Int?
+    var currentRating: Double?
 }

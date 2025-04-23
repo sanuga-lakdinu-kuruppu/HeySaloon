@@ -27,7 +27,9 @@ struct ImageBackgroundView: View {
                     .ignoresSafeArea()
             }
             .frame(
-                width: screenwidth, height: screenHeight * 0.5)
+                width: screenwidth,
+                height: screenHeight * 0.5
+            )
 
             Spacer()
         }

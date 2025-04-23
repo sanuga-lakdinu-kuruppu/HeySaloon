@@ -28,7 +28,7 @@ struct HeySaloonApp: App {
                         } else if destination == Route.stylistIndetail {
                             StylistIndetailView(
                                 commonGround: commonGround,
-                                stylist: CommonGround.shared.selectedStylist!
+                                stylistId: CommonGround.shared.selectedStylistId
                             )
                         } else if destination == Route.mainLogin {
                             MainLoginView(

@@ -5,7 +5,6 @@ struct StylistMapView: View {
 
     @ObservedObject var commonGround: CommonGround
     @ObservedObject var sharedLocationManager: LocationManager
-    @StateObject private var searchManager = SearchManager()
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
     @State var screenHeight: CGFloat = UIScreen.main.bounds.height
     @State var isShowingDirectionSheet: Bool = true
