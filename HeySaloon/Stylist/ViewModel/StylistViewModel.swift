@@ -91,6 +91,13 @@ class StylistViewModel {
                 BookingCreateResponse.self,
                 from: data
             )
+            NotificationManager.shared
+                .sendInstantNotifcation(
+                    title: "Booking Confirmed 🎉",
+                    body:
+                        "Hi \(CommonGround.shared.userProfile?.firstName ?? "there")! Your booking has been successfully created. Get ready for an awesome experience at Hey Saloon. See you soon!",
+                    isInstant: true
+                )
             return bookingCreateResponse.data!
         } else if response.statusCode == 498 {
             try await SupportManager.shared.getNewRefreshToken()

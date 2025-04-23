@@ -99,7 +99,8 @@ class LoginViewModel {
                     .sendInstantNotifcation(
                         title: "Hey Saloon",
                         body:
-                            "Welcome back \(CommonGround.shared.userProfile?.firstName ?? "User"), let's get you started. Have a greate experience with Hey Saloon. Enjoy the style!"
+                            "Welcome back \(CommonGround.shared.userProfile?.firstName ?? "User"), let's get you started. Have a greate experience with Hey Saloon. Enjoy the style!",
+                        isInstant: false
                     )
             }
 

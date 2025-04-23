@@ -25,17 +25,12 @@ struct UserProfileBarView: View {
 
             }
             Spacer()
-            ProfileImageView(
-                url: userProfile?.imageUrl ?? ""
-
-            )
-            .onTapGesture {
-                CommonGround.shared.logout()
-                CommonGround.shared.routes
-                    .append(
-                        Route.mainLogin
-                    )
+            Button {
+                CommonGround.shared.selectedTab = .account
+            } label: {
+                ProfileImageView(url: userProfile?.imageUrl ?? "")
             }
+
         }
     }
 
