@@ -401,6 +401,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Hey Saloon needs the camera access in order to provide a great user experience";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Hey Saloon needs to use the FACE ID for more secure user experience.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Hey Saloon need the location access to give you a better experience.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -432,6 +433,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Hey Saloon needs the camera access in order to provide a great user experience";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Hey Saloon needs to use the FACE ID for more secure user experience.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Hey Saloon need the location access to give you a better experience.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

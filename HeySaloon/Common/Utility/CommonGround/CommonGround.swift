@@ -16,6 +16,7 @@ class CommonGround: ObservableObject {
     @Published var selectedStylistId: String = ""
     @Published var selectedStylist: StylistModel? = nil
     @Published var userProfile: UserProfileModel? = nil
+    @Published var selectedTab: Tab = .home
 
     private init() {}
 
