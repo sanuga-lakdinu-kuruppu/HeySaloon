@@ -1,3 +1,4 @@
+import CoreData
 import SwiftUI
 
 class HomeViewModel {
@@ -10,6 +11,84 @@ class HomeViewModel {
         "\(CommonGround.shared.baseUrl)/stylists?queryOn=topRated"
 
     private init() {}
+
+    func getFavouriteStylistsInCoreData() -> [StylistModel] {
+        let context = CoreDataController.shared.viewContext
+        let fetchRequest = NSFetchRequest<FavouriteStylistCoreDataModel>(
+            entityName: "FavouriteStylistCoreDataModel"
+        )
+
+        do {
+            let results = try context.fetch(fetchRequest)
+            return results.map { result in
+                StylistModel(
+                    stylistId: result.stylistId ?? "",
+                    firstName: result.firstName ?? "",
+                    lastName: result.lastName ?? "",
+                    profileUrl: result.profileUrl ?? "",
+                    thumbnailUrl: result.thumbnailUrl ?? "",
+                    saloonName: result.saloonName,
+                    isOpen: result.isOpen,
+                    distance: result.distance,
+                    isClientLiked: result.isClientLiked,
+                    startTime: result.startTime,
+                    endTime: result.endTime,
+                    totalQueued: Int(result.totalQueued),
+                    queueWillEnd: result.queueWillEnd,
+                    totalReviewed: Int(result.totalReviewed),
+                    currentRating: result.currentRating
+                )
+            }
+        } catch {
+            print("error occured in fetching: \(error)")
+            return []
+        }
+    }
+
+    func saveFavouriteStylistsInCoreData(_ stylists: [StylistModel]) {
+        let context = CoreDataController.shared.viewContext
+
+        //deleting existing records
+        do {
+            let fetchRequest: NSFetchRequest<FavouriteStylistCoreDataModel> =
+                FavouriteStylistCoreDataModel.fetchRequest()
+            let existingStylists = try context.fetch(fetchRequest)
+            existingStylists.forEach { stylist in
+                context.delete(stylist)
+            }
+        } catch {
+            print("error occured in deleting: \(error)")
+        }
+
+        //saving new data
+        stylists.forEach { stylist in
+            let favouriteStylist = FavouriteStylistCoreDataModel(
+                context: context
+            )
+
+            favouriteStylist.stylistId = stylist.stylistId
+            favouriteStylist.firstName = stylist.firstName
+            favouriteStylist.lastName = stylist.lastName
+            favouriteStylist.profileUrl = stylist.profileUrl
+            favouriteStylist.thumbnailUrl = stylist.thumbnailUrl
+            favouriteStylist.saloonName = stylist.saloonName
+            favouriteStylist.isOpen = stylist.isOpen ?? false
+            favouriteStylist.distance = stylist.distance ?? 0.0
+            favouriteStylist.isClientLiked = stylist.isClientLiked ?? false
+            favouriteStylist.startTime = stylist.startTime
+            favouriteStylist.endTime = stylist.endTime
+            favouriteStylist.totalQueued = Int32(stylist.totalQueued ?? 0)
+            favouriteStylist.queueWillEnd = stylist.queueWillEnd
+            favouriteStylist.totalReviewed = Int32(stylist.totalReviewed ?? 0)
+            favouriteStylist.currentRating = stylist.currentRating ?? 0.0
+
+            do {
+                try context.save()
+            } catch {
+                print("error occured in saving: \(error)")
+            }
+        }
+    }
 
     func getFavoriteStylists() async throws -> [StylistModel] {
         //network call
@@ -26,6 +105,7 @@ class HomeViewModel {
                 FavoriteStylistsResponse.self,
                 from: data
             )
+            saveFavouriteStylistsInCoreData(favoriteStylistsResponse.data)
             return favoriteStylistsResponse.data
         } else if response.statusCode == 401 {
             throw NetworkError.notAuthorized
@@ -33,7 +113,7 @@ class HomeViewModel {
             try await SupportManager.shared.getNewRefreshToken()
             return try await getFavoriteStylists()
         } else {
-            throw NetworkError.processError
+            return getFavouriteStylistsInCoreData()
         }
     }
 
