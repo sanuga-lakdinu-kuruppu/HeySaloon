@@ -12,6 +12,7 @@ class StylistViewModel {
 
     private init() {}
 
+    //to get all portfolio of the stylist
     func getPortfolios(stylistId: String) async throws -> [PortfolioModel] {
         //network call
         let (data, response) = try await NetworkSupporter.shared.call(
@@ -38,6 +39,7 @@ class StylistViewModel {
         }
     }
 
+    //to get the stylist details by stylist id
     func getStylist(stylistId: String) async throws -> StylistModel? {
         //network call
         let (data, response) = try await NetworkSupporter.shared.call(
@@ -65,6 +67,7 @@ class StylistViewModel {
         }
     }
 
+    //to create a new booking
     func createBooking(stylist: StylistModel, booking: BookingModel)
         async throws
         -> BookingModel
@@ -91,6 +94,7 @@ class StylistViewModel {
                 BookingCreateResponse.self,
                 from: data
             )
+
             NotificationManager.shared
                 .sendInstantNotifcation(
                     title: "Booking Confirmed 🎉",
@@ -107,6 +111,7 @@ class StylistViewModel {
         }
     }
 
+    //to get the created booking details
     func getAppointment(stylist: StylistModel) async throws -> BookingModel? {
         //network call
         let (data, response) = try await NetworkSupporter.shared.call(
@@ -122,15 +127,7 @@ class StylistViewModel {
                 BookingCreateResponse.self,
                 from: data
             )
-
-            //            if bookingCreateResponse.status == "0000" {
             return bookingCreateResponse.data
-            //            } else if bookingCreateResponse.status == "1111" {
-            //                return nil
-            //            } else {
-            //                throw NetworkError.processError
-            //            }
-
         } else if response.statusCode == 401 {
             throw NetworkError.notAuthorized
         } else {
@@ -138,6 +135,7 @@ class StylistViewModel {
         }
     }
 
+    //to get the next position of the stylist queue
     func calculateNextPosition(stylist: StylistModel?) -> Int {
         guard let stylist = stylist else {
             return 0
@@ -145,8 +143,4 @@ class StylistViewModel {
         let current = stylist.totalQueued ?? 0
         return current + 1
     }
-    //
-    //    func calculateServiceTime(selectedServices: [ServiceModel]) -> Int {
-    //        return selectedServices.reduce(0) { $0 + $1.serviceWillTake }
-    //    }
 }

@@ -10,8 +10,9 @@ struct NearByStylistCardView: View {
     var body: some View {
         VStack(spacing: screenwidth * 0.02) {
 
-            //image
             ZStack {
+
+                //thumbnail image
                 AsyncImage(
                     url: URL(
                         string: stylist.thumbnailUrl
@@ -36,6 +37,8 @@ struct NearByStylistCardView: View {
                             height: verticalCardWidth * 0.7
                         )
                 }
+
+                //rating and favourite button
                 VStack {
                     HStack {
                         Spacer()

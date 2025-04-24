@@ -11,6 +11,7 @@ struct StepItemView: View {
         VStack(spacing: screenwidth * 0.05) {
 
             HStack {
+                //instruction
                 Image(systemName: icon)
                     .padding(.trailing)
                 VStack(alignment: .leading) {
@@ -20,6 +21,8 @@ struct StepItemView: View {
 
                 }
                 Spacer()
+
+                //value
                 VStack(alignment: .leading) {
                     CaptionTextView(
                         text:

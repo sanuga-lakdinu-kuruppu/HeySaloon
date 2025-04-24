@@ -96,6 +96,7 @@ struct StylistProfileCardView: View {
         .cornerRadius(screenwidth * 0.06)
     }
 
+    //to get the relevant color code for each status
     func getColorCode(status: String) -> Color {
         if status == "QUEUED" {
             return .accent

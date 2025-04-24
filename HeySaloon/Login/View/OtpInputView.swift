@@ -7,11 +7,13 @@ struct OtpInputView: View {
 
     var body: some View {
         TextField(
-            "", text: $input
+            "",
+            text: $input
         ).padding()
             .frame(
                 width: screenwidth * 0.15,
-                height: screenwidth * 0.15, alignment: .center
+                height: screenwidth * 0.15,
+                alignment: .center
             )
             .foregroundColor(Color.white)
             .background(Color("SecondaryBackgroundColor"))
@@ -41,7 +43,8 @@ struct OtpInputCombinedView: View {
                     .onChange(of: otp[index]) { value in
                         if otp[index].count > 1 {
                             otp[index] = String(
-                                value.prefix(1))
+                                value.prefix(1)
+                            )
                         }
 
                         if !otp[index].isEmpty {

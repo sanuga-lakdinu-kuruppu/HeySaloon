@@ -9,10 +9,13 @@ struct AccountView: View {
     var body: some View {
         ZStack {
             MainBackgroundView()
+            
+            //profile view
             ScrollView(.vertical, showsIndicators: false) {
                 if let userProfile = userProfile {
                     VStack(spacing: screenwidth * 0.08) {
                         VStack(spacing: screenwidth * 0.02) {
+                            
                             //image view
                             AsyncImage(
                                 url: URL(
@@ -40,8 +43,8 @@ struct AccountView: View {
                             CalloutTextView(text: "Since 22nd of March 2025")
                         }
 
+                        //list view
                         VStack {
-
                             VStack(spacing: 0) {
                                 CommonListItemView(
                                     title: "Messages",

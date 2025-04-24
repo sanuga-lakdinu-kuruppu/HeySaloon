@@ -31,6 +31,7 @@ struct EmailLoginView: View {
                         Spacer()
                     }
 
+                    //email input
                     MainTextFieldView(
                         input: $email,
                         hint: "Enter your email address"
@@ -47,6 +48,7 @@ struct EmailLoginView: View {
 
                 Spacer()
 
+                // next button
                 Button {
                     requestOtp()
                 } label: {

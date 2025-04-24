@@ -32,6 +32,7 @@ struct ArFaceView: UIViewRepresentable {
             currentAnchor.removeFromParent()
         }
 
+        //set hair model into the correct position with x,y,z coordinates
         if let hairModel = try? Entity.load(named: selectedModel.modelName) {
             hairModel.position = SIMD3<Float>(
                 selectedModel.xValue,

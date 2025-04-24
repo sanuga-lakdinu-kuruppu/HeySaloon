@@ -8,6 +8,7 @@ class NetworkSupporter {
 
     private init() {}
 
+    //common network call
     func call<R: Encodable>(
         requestBody: R,
         endpoint: String,
