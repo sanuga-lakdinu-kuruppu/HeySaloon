@@ -76,6 +76,7 @@ struct ActivitiesView: View {
                 )
             }
         }
+
     }
 
     private func getBookings() async {

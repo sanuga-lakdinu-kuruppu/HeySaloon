@@ -3,6 +3,8 @@ import SwiftUI
 struct CommonTabView: View {
 
     @ObservedObject var commonGround: CommonGround
+    @StateObject var webSocketManager = WebSocketManager.shared
+    @State var screenwidth: CGFloat = UIScreen.main.bounds.width
 
     var body: some View {
         TabView(selection: $commonGround.selectedTab) {
@@ -31,6 +33,12 @@ struct CommonTabView: View {
         }
         .accentColor(.accentColor)
         .navigationBarBackButtonHidden(true)
+        .sheet(isPresented: $webSocketManager.isPaid) {
+            BookingRatingSheetView()
+        }
+        .sheet(isPresented: $webSocketManager.isCompleted) {
+            BookingPaymentSheetView()
+        }
     }
 }
 
