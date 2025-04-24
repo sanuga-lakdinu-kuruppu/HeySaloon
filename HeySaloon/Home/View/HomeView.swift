@@ -18,6 +18,7 @@ struct HomeView: View {
     @State var selectedPlace: String = ""
     @State var searchedStylists: [StylistModel]?
     @State var isShowingSearchResult: Bool = false
+    @StateObject private var webSocketManager = WebSocketManager.shared
 
     var body: some View {
         ZStack {
@@ -83,6 +84,7 @@ struct HomeView: View {
             Button("OK", role: .cancel) {}
         }
         .onAppear {
+            webSocketManager.connect(clientId: commonGround.clientId)
             getHomeData()
         }
         .onDisappear {
