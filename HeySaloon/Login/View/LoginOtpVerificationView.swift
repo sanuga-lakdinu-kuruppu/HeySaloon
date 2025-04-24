@@ -14,6 +14,7 @@ struct LoginOtpVerificationView: View {
         ZStack {
             MainBackgroundView()
             VStack {
+
                 VStack(spacing: 16) {
                     HStack {
                         TitleTextView(text: "Enter Received OTP")
@@ -29,6 +30,7 @@ struct LoginOtpVerificationView: View {
                         Spacer()
                     }
 
+                    //otp input section
                     OtpInputCombinedView(otp: $otp)
 
                     HStack {
@@ -36,13 +38,16 @@ struct LoginOtpVerificationView: View {
                             text:
                                 "Didn’t received an otp?"
                         )
-                        HyberLinkTextView(
-                            text: "resend",
-                            foregroundColor: .accent
-                        )
-                        .onTapGesture {
+                        //otp resend button
+                        Button {
                             requestNewOtp()
+                        } label: {
+                            HyberLinkTextView(
+                                text: "resend",
+                                foregroundColor: .accent
+                            )
                         }
+
                         Spacer()
                     }
 
@@ -50,6 +55,7 @@ struct LoginOtpVerificationView: View {
 
                 Spacer()
 
+                //otp verify button
                 Button {
                     verifyOtp()
                 } label: {
@@ -88,6 +94,7 @@ struct LoginOtpVerificationView: View {
         }
     }
 
+    //to clear the otp array
     private func clearOtpArray() {
         otp.removeAll()
         otp = Array(repeating: "", count: 4)

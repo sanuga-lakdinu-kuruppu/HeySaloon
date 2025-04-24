@@ -15,6 +15,7 @@ struct ServiceDetailItemView: View {
         VStack(spacing: screenwidth * 0.05) {
 
             HStack {
+                //service details
                 VStack(alignment: .leading) {
                     CaptionTextView(text: thisService.serviceName)
                     HStack(spacing: screenwidth * 0.04) {
@@ -32,6 +33,7 @@ struct ServiceDetailItemView: View {
 
                 Spacer()
 
+                //service add ,remove button
                 Button {
                     toggleServiceSelection()
                 } label: {
@@ -53,6 +55,7 @@ struct ServiceDetailItemView: View {
         .padding(.top, screenwidth * 0.05)
     }
 
+    //change service selection in the booking process
     private func toggleServiceSelection() {
         var currentBooking =
             booking

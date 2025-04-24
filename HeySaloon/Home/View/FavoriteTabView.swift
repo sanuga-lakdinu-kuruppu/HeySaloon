@@ -23,6 +23,7 @@ struct FavoriteTabView: View {
                 }
             }
 
+            //favourite items
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(favoriteStylists, id: \.stylistId) {

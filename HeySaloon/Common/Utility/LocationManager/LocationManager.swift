@@ -20,6 +20,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         span: DefaultDetails.defaultSpan
     )
 
+    //to check the location service enabled by the user
     func checkIfLocationServiceIsEnabled() {
         if CLLocationManager.locationServicesEnabled() {
             locationManager = CLLocationManager()
@@ -33,6 +34,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
 
+    //to check the location authorization status for the application
     func checkLocationAuthorizationStatus() {
         guard let locationManager = locationManager else { return }
 
@@ -66,25 +68,13 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
 
+    //to notify the app whenever user change the location permissions.
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         checkLocationAuthorizationStatus()
     }
 
+    //to get the user's gps location
     func getCurrentLocation() -> CLLocationCoordinate2D? {
         return locationManager?.location?.coordinate
     }
-    //
-    //    func zoomIn() {
-    //        region.span.latitudeDelta *= 0.5
-    //        region.span.longitudeDelta *= 0.5
-    //    }
-    //
-    //    func zoomOut() {
-    //        region.span.latitudeDelta *= 2.0
-    //        region.span.longitudeDelta *= 2.0
-    //    }
-    //
-    //    func recenter() {
-    //        region.center = (locationManager?.location?.coordinate)!
-    //    }
 }

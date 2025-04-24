@@ -15,17 +15,20 @@ class SearchManager: NSObject, ObservableObject, MKLocalSearchCompleterDelegate
         localSearchCompleter.resultTypes = .query
     }
 
+    //to serach a string (global location search)
     func search(query: String) {
         suggestions.removeAll()
         localSearchCompleter.queryFragment = query
     }
 
+    //any time user change the input query
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         DispatchQueue.main.async {
             self.suggestions = completer.results
         }
     }
 
+    //to get the location coordinates for a particular user selection in the location list
     func getLocationCoordinates(
         for suggestion: String,
         completion: @escaping (CLLocationCoordinate2D?) -> Void

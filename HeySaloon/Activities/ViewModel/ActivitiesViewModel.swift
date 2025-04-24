@@ -7,6 +7,7 @@ class ActivitiesViewModel {
         "\(CommonGround.shared.baseUrl)/bookings/clientId/\(CommonGround.shared.clientId)?status=QUEUED"
     private init() {}
 
+    //tog get the bookings by client id
     func getBookingsByClientId() async throws -> [BookingModel] {
         //network call
         let (data, response) = try await NetworkSupporter.shared.call(
