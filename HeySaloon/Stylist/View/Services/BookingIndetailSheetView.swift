@@ -236,6 +236,7 @@ struct BookingIndetailSheetView: View {
         }
     }
 
+    //to navigate to the map view
     func clickDirectionButton() {
         let tempStylist: StylistModel = .init(
             stylistId: booking?.stylist?.stylistId

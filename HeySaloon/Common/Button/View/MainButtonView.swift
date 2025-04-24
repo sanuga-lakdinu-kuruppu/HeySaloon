@@ -11,6 +11,8 @@ struct MainButtonView: View {
 
     var body: some View {
         HStack {
+
+            //button icon
             if !icon.isEmpty {
                 Image(systemName: icon)
                     .resizable()
@@ -22,6 +24,8 @@ struct MainButtonView: View {
                     )
                     .padding(.trailing, 8)
             }
+
+            //button text
             Text(text)
                 .font(.callout)
                 .fontWeight(.bold)

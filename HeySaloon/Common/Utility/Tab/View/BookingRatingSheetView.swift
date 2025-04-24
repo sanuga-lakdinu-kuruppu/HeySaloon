@@ -49,6 +49,8 @@ struct BookingRatingSheetView: View {
                         }
 
                         VStack(spacing: screenwidth * 0.04) {
+
+                            //rating bar
                             HStack(spacing: screenwidth * 0.03) {
                                 ForEach(1...5, id: \.self) { index in
                                     Button {
@@ -70,6 +72,7 @@ struct BookingRatingSheetView: View {
 
                             }
 
+                            //rating button
                             Button {
                             } label: {
                                 MainButtonView(

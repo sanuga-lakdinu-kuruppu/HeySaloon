@@ -20,7 +20,7 @@ struct SignoutConfirmationSheet: View {
                     )
 
                     VStack {
-                        //no need to cancel button
+                        //no need to sign out button
                         Button {
                             isShowSignOutSheet.toggle()
                         } label: {
@@ -32,7 +32,7 @@ struct SignoutConfirmationSheet: View {
                             )
                         }
 
-                        //cancel button
+                        //sign out button
                         Button {
                             CommonGround.shared.logout()
                             CommonGround.shared.routes

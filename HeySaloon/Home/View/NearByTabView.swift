@@ -22,6 +22,7 @@ struct NearByTabView: View {
                 }
             }
 
+            //near by stylists
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     if nearByStylists.count == 1 {

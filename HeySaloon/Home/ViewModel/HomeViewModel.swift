@@ -12,6 +12,7 @@ class HomeViewModel {
 
     private init() {}
 
+    //to get favourite stylist data from core data
     func getFavouriteStylistsInCoreData() -> [StylistModel] {
         let context = CoreDataController.shared.viewContext
         let fetchRequest = NSFetchRequest<FavouriteStylistCoreDataModel>(
@@ -45,6 +46,7 @@ class HomeViewModel {
         }
     }
 
+    //to save favourite stylists in core data
     func saveFavouriteStylistsInCoreData(_ stylists: [StylistModel]) {
         let context = CoreDataController.shared.viewContext
 
@@ -90,6 +92,8 @@ class HomeViewModel {
         }
     }
 
+    //498 - > token expired
+    //to get favourite stylist with an API call
     func getFavoriteStylists() async throws -> [StylistModel] {
         //network call
         let (data, response) = try await NetworkSupporter.shared.call(
@@ -117,6 +121,7 @@ class HomeViewModel {
         }
     }
 
+    //to get near by stylists with an API call
     func getNearByStylists(lat: Double, log: Double) async throws
         -> [StylistModel]
     {
@@ -146,6 +151,7 @@ class HomeViewModel {
         }
     }
 
+    // to get top rate stylists with an API call
     func getTopRatedStylists() async throws -> [StylistModel] {
         //network call
         let (data, response) = try await NetworkSupporter.shared.call(

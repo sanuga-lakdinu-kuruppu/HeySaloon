@@ -23,6 +23,7 @@ final class WebSocketManager: NSObject, ObservableObject {
         )
     }
 
+    //to connect with the websocket
     func connect(clientId: String) {
         guard !isConnected else { return }
 
@@ -38,17 +39,19 @@ final class WebSocketManager: NSObject, ObservableObject {
         listenForMessages()
     }
 
+    //to manually disconnect from the web socket
     func disconnect() {
         webSocketTask?.cancel(with: .goingAway, reason: nil)
         isConnected = false
     }
 
+    //websocket listening
     private func listenForMessages() {
         webSocketTask?.receive { [weak self] result in
             guard let self = self else { return }
 
             switch result {
-            case .failure(let error):
+            case .failure(_):
                 self.isConnected = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                     self.connect(clientId: CommonGround.shared.clientId)
@@ -67,6 +70,7 @@ final class WebSocketManager: NSObject, ObservableObject {
         }
     }
 
+    //this is the method , that will be triggered if the server send notification as json
     private func handleReceivedData(_ data: Data) {
         if let json = try? JSONSerialization.jsonObject(with: data, options: [])
             as? [String: Any]
@@ -75,6 +79,7 @@ final class WebSocketManager: NSObject, ObservableObject {
         }
     }
 
+    //this is the method, that will be triggered when server send a push notification as text
     private func handleReceivedText(_ text: String) {
         print("text recieved \(text)")
 
@@ -84,6 +89,7 @@ final class WebSocketManager: NSObject, ObservableObject {
         do {
             let message = try decoder.decode(WebSocketMessage.self, from: data!)
             if message.type == "STARTED" {
+                //styling process is started
                 NotificationManager.shared
                     .sendInstantNotifcation(
                         title: "Hey Saloon",
@@ -92,6 +98,7 @@ final class WebSocketManager: NSObject, ObservableObject {
                         isInstant: true
                     )
             } else if message.type == "COMPLETED" {
+                //styling process is completed
                 NotificationManager.shared
                     .sendInstantNotifcation(
                         title: "Hey Saloon",
@@ -104,6 +111,7 @@ final class WebSocketManager: NSObject, ObservableObject {
                     self.currentBooking = message.booking
                 }
             } else if message.type == "PAID" {
+                //user already paid for the booking
                 NotificationManager.shared
                     .sendInstantNotifcation(
                         title: "Hey Saloon",

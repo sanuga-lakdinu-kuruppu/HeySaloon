@@ -15,7 +15,6 @@ struct MapInstructionView: View {
 
             //top current step
             VStack {
-
                 Spacer()
 
                 HStack {
@@ -85,6 +84,8 @@ struct MapInstructionView: View {
             //bottom list of all steps
             VStack {
                 VStack(spacing: screenwidth * 0.08) {
+
+                    //end route button
                     Button {
                         dismiss()
                     } label: {
@@ -96,6 +97,7 @@ struct MapInstructionView: View {
                         )
                     }
 
+                    //list of instructions
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack(spacing: 0) {
                             ForEach(steps, id: \.description) { step in

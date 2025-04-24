@@ -237,6 +237,7 @@ struct HomeView: View {
         }
     }
 
+    //to get search result based on user selection
     private func getSearchResults() {
         searchText = selectedPlace
         if selectedPlace.isEmpty {
@@ -262,6 +263,7 @@ struct HomeView: View {
 
     }
 
+    //to make api call to get the search results
     private func getSearchedStylists(lat: Double, log: Double) async {
         do {
             searchedStylists =
