@@ -5,6 +5,7 @@ class SupportManager {
     let refreshTokenUrl =
         "\(CommonGround.shared.baseUrl)/auth/refresh"
 
+    //list of ar models in the appliation running with thier respective config data
     let arModelList: [ArModel] = [
         .init(
             name: "Crew Cut",
@@ -123,7 +124,7 @@ class SupportManager {
         }
 
         guard let data = Data(base64Encoded: base64) else {
-            print("Base64 decoding failed")
+            print("base64 decoding failed")
             return nil
         }
         let jsonObject = try? JSONSerialization.jsonObject(
@@ -133,8 +134,8 @@ class SupportManager {
         return jsonObject as? [String: Any]
     }
 
+    //to get a new access token from the refresh token
     func getNewRefreshToken() async throws {
-        print("======================= >>>>> 1111")
         let (refreshData, refreshResponse) =
             try await NetworkSupporter.shared.call(
                 requestBody: RefreshTokenRequest(
@@ -147,7 +148,6 @@ class SupportManager {
             )
 
         if refreshResponse.statusCode == 200 {
-            print("this is the refresh call success")
             let emailOtpVerifyResponse = try JSONDecoder().decode(
                 EmailOtpVerifyResponse.self,
                 from: refreshData
@@ -159,7 +159,6 @@ class SupportManager {
             CommonGround.shared.saveUserDefaults()
 
         } else {
-            print("======================= >>>>> 2222")
             throw NetworkError.processError
         }
     }
@@ -172,6 +171,7 @@ class SupportManager {
         return formatter.string(from: currentDate)
     }
 
+    //to convert the ISO string to the desired format but without time
     func convertIOSStringToMyFormatWithoutTime(
         _ isoDateString: String,
         outputFormat: String = "MMM d, yyyy"
@@ -193,6 +193,7 @@ class SupportManager {
         return outputFormatter.string(from: date)
     }
 
+    //to get the current time in ISO format
     func getCurrentISOTimeString() -> String {
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withInternetDateTime]

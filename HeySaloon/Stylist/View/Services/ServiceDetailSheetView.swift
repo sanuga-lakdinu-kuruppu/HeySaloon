@@ -59,7 +59,6 @@ struct ServiceDetailSheetView: View {
                         }
 
                         //join queue button
-
                         Button {
                             clickJoinQueue()
                         } label: {
@@ -94,6 +93,7 @@ struct ServiceDetailSheetView: View {
         .interactiveDismissDisabled(true)
     }
 
+    //to join the stylist queue
     func clickJoinQueue() {
         booking?.queuedAt = stylistViewModel.calculateNextPosition(
             stylist: stylist

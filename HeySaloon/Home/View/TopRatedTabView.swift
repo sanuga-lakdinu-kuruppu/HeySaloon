@@ -14,6 +14,7 @@ struct TopRatedTabView: View {
                 Spacer()
             }
 
+            //top rated stytlists
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(topRatedStylists, id: \.stylistId) {

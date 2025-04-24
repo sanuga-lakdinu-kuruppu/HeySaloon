@@ -25,6 +25,7 @@ struct UserProfileBarView: View {
 
             }
             Spacer()
+
             Button {
                 CommonGround.shared.selectedTab = .account
             } label: {

@@ -6,6 +6,7 @@ class NotificationManager {
 
     private init() {}
 
+    //to request permissions for push notifications
     func requestPermission() {
         let options: UNAuthorizationOptions = [.alert, .sound]
         UNUserNotificationCenter.current().requestAuthorization(
@@ -13,6 +14,7 @@ class NotificationManager {
         ) { _, _ in }
     }
 
+    //to send instant local notifications
     func sendInstantNotifcation(
         title: String,
         body: String,

@@ -206,32 +206,3 @@ struct BookingConfirmatinSheetView: View {
         }
     }
 }
-
-//#Preview {
-//    BookingConfirmationPreview()
-//}
-//
-//struct BookingConfirmationPreview: View {
-//    @State var grandTotal: Double = 0
-//    @State var selectedServices: [ServiceModel] = [
-//        .init(id: 1, name: "jdwkl", price: 32.32, minutes: 32),
-//        .init(id: 1, name: "jdwkl", price: 32.32, minutes: 32),
-//        .init(id: 1, name: "jdwkl", price: 32.32, minutes: 32),
-//        .init(id: 1, name: "jdwkl", price: 32.32, minutes: 32),
-//    ]
-//    @State var isShowBookingConfirmationSheet: Bool = true
-//    @State var queuedAt: Int = 0
-//    @State var finishTime: String = ""
-//    @State var serviceTime: Int = 0
-//
-//    var body: some View {
-//        BookingConfirmatinSheetView(
-//            isShowBookingConfirmationSheet: $isShowBookingConfirmationSheet,
-//            grandTotal: $grandTotal,
-//            selectedServices: $selectedServices,
-//            queuedAt: $queuedAt,
-//            finishTime: $finishTime,
-//            serviceTime: $serviceTime
-//        )
-//    }
-//}

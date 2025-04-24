@@ -7,6 +7,7 @@ class LoginViewModel {
 
     private init() {}
 
+    //to request otp in the login process
     func requestOtpWithEmail(emailAddress: String) async throws {
 
         //request object creation
@@ -24,6 +25,7 @@ class LoginViewModel {
         )
 
         //response handling
+        // 429 -> max request reached
         if response.statusCode == 200 {
             DispatchQueue.main.async {
                 CommonGround.shared.email = emailAddress
@@ -35,6 +37,7 @@ class LoginViewModel {
         }
     }
 
+    //to verify otp after getting the otp
     func verifyOtpWithEmail(otp: String) async throws {
 
         //request object creation
@@ -59,7 +62,10 @@ class LoginViewModel {
                 EmailOtpVerifyResponse.self,
                 from: data
             )
+
+            //successful login post processes
             DispatchQueue.main.async {
+                //global object setup
                 CommonGround.shared.isLoggedIn = true
                 CommonGround.shared.accessToken =
                     emailOtpVerifyResponse.data.accessToken
@@ -95,6 +101,8 @@ class LoginViewModel {
 
                 }
                 CommonGround.shared.saveUserDefaults()
+
+                //push notification trigger
                 NotificationManager.shared
                     .sendInstantNotifcation(
                         title: "Hey Saloon",

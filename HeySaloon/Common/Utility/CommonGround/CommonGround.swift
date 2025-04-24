@@ -20,6 +20,7 @@ class CommonGround: ObservableObject {
 
     private init() {}
 
+    //to get the userdefault details from the system
     func getUserDefaults() {
         isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
         accessToken = UserDefaults.standard.string(forKey: "accessToken") ?? ""
@@ -41,6 +42,7 @@ class CommonGround: ObservableObject {
         )
     }
 
+    //to save the values in the user defaults
     func saveUserDefaults() {
         UserDefaults.standard.set(isLoggedIn, forKey: "isLoggedIn")
         UserDefaults.standard.set(accessToken, forKey: "accessToken")
@@ -53,6 +55,7 @@ class CommonGround: ObservableObject {
         UserDefaults.standard.set(userProfile?.imageUrl, forKey: "imageUrl")
     }
 
+    //to remove the saved user defaults
     func removeUserDefaults() {
         UserDefaults.standard.removeObject(forKey: "isLoggedIn")
         UserDefaults.standard.removeObject(forKey: "accessToken")
@@ -65,6 +68,7 @@ class CommonGround: ObservableObject {
         UserDefaults.standard.removeObject(forKey: "imageUrl")
     }
 
+    //to logout from the appliacation
     func logout() {
         self.isLoggedIn = false
         self.role = nil
