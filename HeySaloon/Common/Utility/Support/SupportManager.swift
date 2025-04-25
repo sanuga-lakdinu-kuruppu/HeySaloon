@@ -69,7 +69,7 @@ class SupportManager {
     func getFinishTime(finishTime: String) -> String {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [
-            .withInternetDateTime
+            .withInternetDateTime, .withFractionalSeconds,
         ]
 
         if let date = formatter.date(from: finishTime) {
