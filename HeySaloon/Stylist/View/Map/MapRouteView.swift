@@ -33,7 +33,7 @@ struct MapRouteView: UIViewRepresentable {
         let now = Date()
 
         if let lastTime = context.coordinator.lastRouteDrawTime,
-            now.timeIntervalSince(lastTime) < 20
+            now.timeIntervalSince(lastTime) < 10
         {
             return
         }
@@ -53,6 +53,17 @@ struct MapRouteView: UIViewRepresentable {
         if let lat = selectecStylist.location?.coordinates?.last,
             let lng = selectecStylist.location?.coordinates?.first
         {
+
+            //add 3d view
+            let center = from
+            let camera = MKMapCamera()
+            camera.centerCoordinate = center
+            camera.pitch = 60
+            camera.altitude = 100
+            camera.heading = 0
+            uiView.setCamera(camera, animated: true)
+
+            //draw the route
             drawRoute(
                 from: from,
                 to: CLLocationCoordinate2D(
