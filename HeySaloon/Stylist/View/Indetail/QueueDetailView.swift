@@ -5,6 +5,11 @@ struct QueueDetailView: View {
     var stylist: StylistModel?
     @State var screenwidth: CGFloat = UIScreen.main.bounds.width
     @State var screenHeight: CGFloat = UIScreen.main.bounds.height
+    var currentTime: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: Date())
+    }
 
     var body: some View {
         VStack {
@@ -19,10 +24,18 @@ struct QueueDetailView: View {
                                 text:
                                     "\(stylist.totalQueued ?? 0) People Queued"
                             )
-                            CaptionTextView(
-                                text:
-                                    "Wait \(SupportManager.shared.getTimeDifference(finishTime: stylist.queueWillEnd ?? "")) min (\(SupportManager.shared.getFinishTime(finishTime: stylist.queueWillEnd ?? "")))"
-                            )
+                            if (stylist.totalQueued ?? 0) == 0 {
+                                CaptionTextView(
+                                    text:
+                                        "Wait 0 min (\(currentTime))"
+                                )
+                            } else {
+                                CaptionTextView(
+                                    text:
+                                        "Wait \(SupportManager.shared.getTimeDifference(finishTime: stylist.queueWillEnd ?? "")) min (\(SupportManager.shared.getFinishTime(finishTime: stylist.queueWillEnd ?? "")))"
+                                )
+                            }
+
                         }
 
                     }

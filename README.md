@@ -25,7 +25,7 @@ This is a mobile application developed to address the problem with customers wai
 ### 🛠️ Tech Stack
 
 #### 📱 iOS Development
-- **Language:** Swift 5
+- **Language:** Swift
 - **IDE:** Xcode
 - **UI Frameworks:** SwiftUI / UIKit
 - **AR & 3D:** ARKit, RealityKit, Reality Converter, Reality Composer Pro
